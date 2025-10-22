@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="database.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="906"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="sqlite_sequence" custom_title="0" dock_id="1" table="4,15:mainsqlite_sequence"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011300ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">-- 1. Borrar la tabla 'libros' si ya existe
+DROP TABLE IF EXISTS libros;
+
+-- 2. Crear la tabla 'libros' (versión SQLite)
+CREATE TABLE libros (
+    -- --- Columna de Identificación (Clave Primaria) ---
+    id INTEGER PRIMARY KEY, -- Se auto-incrementa solo
+
+    -- --- Datos Principales del Libro ---
+    titulo TEXT NOT NULL,
+    autor TEXT,
+    descripcion TEXT,
+    isbn TEXT UNIQUE,
+
+    -- --- Datos de Publicación y Clasificación ---
+    editorial TEXT,
+    ano_publicacion INTEGER,
+    numero_paginas INTEGER,
+    genero TEXT,
+    idioma TEXT,
+    formato TEXT, -- Ej: &quot;PDF&quot;, &quot;EPUB&quot;
+
+    -- --- Campos de Gestión Interna (Panel) ---
+    -- Reemplazo de ENUM:
+    estado TEXT DEFAULT 'Borrador' CHECK(estado IN ('Publicado', 'Borrador', 'Oculto')),
+    -- Reemplazo de BOOLEAN:
+    destacado INTEGER DEFAULT 0, -- 0 = false, 1 = true
+
+    -- --- Campos para los Archivos (BLOBs) ---
+
+    -- Portada
+    nombre_portada TEXT,
+    tipo_portada TEXT,
+    portada_contenido BLOB, -- Solo hay un tipo BLOB
+
+    -- Archivo del Libro
+    nombre_archivo TEXT,
+    tipo_archivo TEXT,
+    archivo_contenido BLOB, -- Solo hay un tipo BLOB
+
+    -- --- Marcas de Tiempo ---
+    fecha_creacion TEXT DEFAULT (DATETIME('now', 'localtime')),
+    fecha_actualizacion TEXT DEFAULT (DATETIME('now', 'localtime'))
+);
+
+-- 3. Crear el TRIGGER para 'ON UPDATE' (Paso extra para SQLite)
+-- Esto actualiza 'fecha_actualizacion' automáticamente cada vez que editas una fila
+CREATE TRIGGER IF NOT EXISTS actualizar_fecha_modificacion
+AFTER UPDATE ON libros
+FOR EACH ROW
+BEGIN
+    UPDATE libros
+    SET fecha_actualizacion = (DATETIME('now', 'localtime'))
+    WHERE id = OLD.id;
+END;</sql><current_tab id="0"/></tab_sql></sqlb_project>
