@@ -1,4 +1,8 @@
-﻿node_modules/
+﻿database.db
+database.sqbpro
+Logo/
+untitled.pdf
+node_modules/
 .env
 dist/
 .vscode/
