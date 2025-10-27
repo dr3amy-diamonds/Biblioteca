@@ -33,17 +33,27 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-bottom: 2rem;
+  padding-bottom: 0;
 }
 
-/* Estilos del encabezado */
+/* --- ESTILOS DEL ENCABEZADO COMPLETO --- */
 .menu-header {
   background-color: var(--primary-color);
   color: var(--light-text);
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 0 2rem; /* Padding superior, sin padding inferior */
+  display: flex;
+  flex-direction: column; /* Organiza los elementos en columna */
+  gap: 1rem; /* Espacio entre la fila superior y la nav */
+}
+
+/* Nueva clase para la fila superior dentro del header */
+.header-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  padding-bottom: 1rem; /* Espacio antes de la navegación */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separador sutil */
 }
 
 .logo-container {
@@ -61,7 +71,7 @@ h1 {
   font-weight: normal;
 }
 
-/* Estilos de búsqueda */
+/* Estilos de búsqueda (sin cambios) */
 .search-container {
   display: flex;
   align-items: center;
@@ -83,11 +93,11 @@ h1 {
   cursor: pointer;
 }
 
-/* Estilos de navegación */
+/* Estilos de navegación (ahora dentro del header) */
 .main-nav {
-  background-color: var(--accent-color);
-  padding: 1rem 2rem;
-  margin-top: auto;
+  background-color: transparent; /* Fondo transparente ya que el header tiene el color */
+  padding: 0.5rem 0; /* Padding solo vertical, horizontal se hereda o ajusta */
+  width: 100%; /* Ocupa todo el ancho del header */
 }
 
 .nav-links {
@@ -137,10 +147,11 @@ h1 {
 
 /* Estilos para la sección de libros */
 .books-section {
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 2rem 2rem; 
   margin: 0 auto;
   max-width: 1200px;
   width: 100%;
+  flex-grow: 1; 
 }
 
 .books-section h2 {
@@ -199,11 +210,16 @@ h1 {
 
 @media (max-width: 768px) {
   .menu-header {
-    flex-direction: column;
+    flex-direction: column; /* Ya es columna, pero útil para recordar */
     gap: 1rem;
     padding: 1rem;
   }
   
+  .header-top-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .search-container {
     width: 100%;
   }
@@ -226,4 +242,38 @@ h1 {
   .books-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* --- ESTILOS PARA EL FOOTER --- */
+.footer {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 2rem 2rem;
+  margin-top: auto; 
+  width: 100%;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-link {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
 }
