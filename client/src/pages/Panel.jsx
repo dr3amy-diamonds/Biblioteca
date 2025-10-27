@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from "react";
-// Importamos los estilos del módulo CSS
 import styles from "../styles/Panel.module.css";
 
-// --- 1. Definimos la URL de tu Backend ---
 const API_URL = "http://localhost:3001";
+
+// --- Definimos el estado inicial del formulario ---
+const estadoInicialForm = {
+    titulo: "", autor: "", descripcion: "", isbn: "", editorial: "",
+    ano_publicacion: "", numero_paginas: "", genero: "", idioma: "",
+    formato: "", estado: "Borrador", destacado: false,
+};
 
 const Panel = () => {
     // Estado para el formulario (completo)
-    const [formData, setFormData] = useState({
-        titulo: "", autor: "", descripcion: "", isbn: "", editorial: "",
-        ano_publicacion: "", numero_paginas: "", genero: "", idioma: "",
-        formato: "", estado: "Borrador", destacado: false,
-    });
+    const [formData, setFormData] = useState(estadoInicialForm);
     // Estados para los archivos
     const [portada, setPortada] = useState(null);
     const [archivoLibro, setArchivoLibro] = useState(null);
 
     // Estado para la lista de libros
     const [libros, setLibros] = useState([]);
+    
+    // --- NUEVO: Estado para saber qué ID estamos editando ---
+    const [editingId, setEditingId] = useState(null);
 
-    // --- 2. Función para LEER (READ) desde la API ---
+    // --- Función para LEER (READ) desde la API (Sin cambios) ---
     const fetchLibros = async () => {
         try {
-            // Llama a tu ruta GET /api/libros
             const response = await fetch(`${API_URL}/api/libros`);
             const result = await response.json();
             if (result.success) {
-                setLibros(result.data); // Llena la tabla con datos de la BD
+                setLibros(result.data); 
             } else {
                 console.error("Error al cargar libros:", result.message);
             }
@@ -35,10 +38,25 @@ const Panel = () => {
         }
     };
 
-    // --- 3. Cargar los libros cuando el componente inicia ---
+    // --- Cargar los libros cuando el componente inicia (Sin cambios) ---
     useEffect(() => {
-        fetchLibros(); // Ya no usa mockLibros
+        fetchLibros();
     }, []);
+    
+    // --- NUEVO: Función para limpiar el formulario ---
+    const resetForm = () => {
+        setFormData(estadoInicialForm);
+        setPortada(null);
+        setArchivoLibro(null);
+        setEditingId(null);
+        
+        // Limpiar visualmente los inputs de archivo
+        // Usamos try/catch por si los elementos no están renderizados
+        try {
+            document.querySelector("#portada").value = null;
+            document.querySelector("#archivoLibro").value = null;
+        } catch (e) {}
+    };
 
     // --- Handlers para el Formulario (sin cambios) ---
     const handleChange = (e) => {
@@ -48,19 +66,16 @@ const Panel = () => {
     const handlePortadaChange = (e) => { setPortada(e.target.files[0]); };
     const handleArchivoChange = (e) => { setArchivoLibro(e.target.files[0]); };
     
-    // --- 4. Función para CREAR (CREATE) en la API ---
+    
+    // --- Función handleSubmit (AHORA MANEJA CREATE Y UPDATE) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Usamos FormData porque estamos enviando archivos (BLOBs)
+        // 1. Usamos FormData para enviar archivos
         const dataParaApi = new FormData();
-
-        // 1. Añadir todos los campos de texto
         for (const key in formData) {
             dataParaApi.append(key, formData[key]);
         }
-        
-        // 2. Añadir los archivos
         if (portada) {
             dataParaApi.append("portada", portada);
         }
@@ -69,43 +84,42 @@ const Panel = () => {
         }
 
         try {
-            // Llama a tu ruta POST /api/libros
-            const response = await fetch(`${API_URL}/api/libros`, {
-                method: "POST",
-                body: dataParaApi,
-                // No se pone 'Content-Type', FormData lo hace automático
-            });
+            let response;
+            
+            // 2. Decidir si es UPDATE (PUT) o CREATE (POST)
+            if (editingId) {
+                // --- Lógica de UPDATE (PUT) ---
+                response = await fetch(`${API_URL}/api/libros/${editingId}`, {
+                    method: "PUT",
+                    body: dataParaApi,
+                });
+            } else {
+                // --- Lógica de CREATE (POST) ---
+                response = await fetch(`${API_URL}/api/libros`, {
+                    method: "POST",
+                    body: dataParaApi,
+                });
+            }
 
             const result = await response.json();
 
             if (result.success) {
-                alert("¡Libro guardado exitosamente!");
-                // Limpiar formulario y recargar la lista
-                setFormData({
-                    titulo: "", autor: "", descripcion: "", isbn: "", editorial: "",
-                    ano_publicacion: "", numero_paginas: "", genero: "", idioma: "",
-                    formato: "", estado: "Borrador", destacado: false,
-                });
-                setPortada(null);
-                setArchivoLibro(null);
-                e.target.querySelector("#portada").value = null;
-                e.target.querySelector("#archivoLibro").value = null;
-                
+                alert(`¡Libro ${editingId ? 'actualizado' : 'guardado'} exitosamente!`);
+                resetForm();   // Limpiar formulario y salir del modo edición
                 fetchLibros(); // Recargar la tabla
             } else {
-                alert(`Error al guardar: ${result.message}`);
+                alert(`Error: ${result.message}`);
             }
         } catch (err) {
-            console.error("Error de red al guardar:", err);
-            alert("Error de conexión al guardar el libro.");
+            console.error("Error de red al guardar/actualizar:", err);
+            alert("Error de conexión al guardar/actualizar el libro.");
         }
     };
     
-    // --- 5. Función para BORRAR (DELETE) en la API ---
+    // --- Función para BORRAR (DELETE) (Sin cambios) ---
     const handleEliminar = async (libro) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar "${libro.titulo}"?`)) {
             try {
-                // Llama a tu ruta DELETE /api/libros/:id
                 const response = await fetch(`${API_URL}/api/libros/${libro.id}`, {
                     method: 'DELETE'
                 });
@@ -124,40 +138,56 @@ const Panel = () => {
         }
     };
     
-    // (HandleEditar sigue como simulación por ahora)
-    const handleEditar = (libro) => {
-        alert(`(Función Editar aún no conectada) Cargando datos de "${libro.titulo}"...`);
-        setFormData({
-             ...formData, 
-             titulo: libro.titulo,
-             autor: libro.autor,
-             isbn: libro.isbn,
-             // ...etc
-        });
+    // --- NUEVO: Función para EDITAR (Carga datos en el form) ---
+    const handleEditar = async (libro) => {
+        console.log("Cargando datos para editar:", libro.id);
+        try {
+            // 1. Llamar a la API para obtener TODOS los datos de este libro
+            const response = await fetch(`${API_URL}/api/libros/${libro.id}`);
+            const result = await response.json();
+            
+            if (result.success) {
+                // 2. Rellenar el formulario con los datos recibidos
+                setFormData(result.data);
+                // 3. Marcar el ID que estamos editando
+                setEditingId(libro.id);
+                // 4. Limpiar los campos de archivo (el usuario debe subirlos de nuevo si quiere cambiarlos)
+                setPortada(null);
+                setArchivoLibro(null);
+                document.querySelector("#portada").value = null;
+                document.querySelector("#archivoLibro").value = null;
+                
+                // Opcional: Mover la vista al formulario
+                window.scrollTo(0, 0); 
+            } else {
+                alert(`Error al cargar datos: ${result.message}`);
+            }
+        } catch (err) {
+             console.error("Error de red al cargar libro:", err);
+             alert("Error de conexión al cargar datos para editar.");
+        }
     };
 
     return (
-        // Contenedor principal (fondo gris)
         <div className={styles.panel}>
             
-            {/* Encabezado del Panel */}
             <header className={styles.panelHeader}>
                 <h1>Panel de Administración</h1>
                 <button className={styles.btnGestionar}>Gestionar Relaciones</button>
             </header>
 
-            {/* Contenedor de 2 Columnas (Flexbox) */}
             <div className={styles.panelContent}>
 
                 {/* --- COLUMNA IZQUIERDA: TARJETA DE FORMULARIO --- */}
                 <div className={styles.formCard}>
-                    <h2>Registrar Nuevo Item</h2>
+                    {/* Título dinámico */}
+                    <h2>{editingId ? "Editando Libro" : "Registrar Nuevo Item"}</h2>
                     
-                    {/* El formulario ahora llama al nuevo handleSubmit (async) */}
                     <form className={styles.libroForm} onSubmit={handleSubmit}>
                         
-                        {/* Columna 1 del Formulario */}
+                        {/* Columna 1 del Formulario (Inputs sin cambios) */}
                         <div className={styles.formColumna}>
+                            {/* ... (todos los .formGroup de título, autor, desc, isbn, editorial) ... */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="titulo">Título del Libro:</label>
                                 <input type="text" id="titulo" name="titulo" value={formData.titulo} onChange={handleChange} required />
@@ -180,8 +210,9 @@ const Panel = () => {
                             </div>
                         </div>
 
-                        {/* Columna 2 del Formulario */}
+                        {/* Columna 2 del Formulario (Inputs sin cambios) */}
                         <div className={styles.formColumna}>
+                            {/* ... (todos los .formGroup de año, pág, género, etc.) ... */}
                             <div className={styles.formGroupInline}>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="ano_publicacion">Año Pub:</label>
@@ -219,16 +250,26 @@ const Panel = () => {
                             <div className={styles.formGroup}>
                                 <label htmlFor="portada">Imagen de Portada:</label>
                                 <input type="file" id="portada" name="portada" accept="image/*" onChange={handlePortadaChange} />
+                                {editingId && <small>Dejar vacío para conservar la portada actual.</small>}
                             </div>
                             <div className={styles.formGroup}>
                                 <label htmlFor="archivoLibro">Archivo del Libro (PDF/EPUB):</label>
                                 <input type="file" id="archivoLibro" name="archivoLibro" accept=".pdf,.epub" onChange={handleArchivoChange} />
+                                {editingId && <small>Dejar vacío para conservar el archivo actual.</small>}
                             </div>
                         </div>
 
-                        {/* Botón de Guardar */}
+                        {/* Botones dinámicos */}
                         <div className={styles.formActions}>
-                            <button type="submit" className={styles.btnGuardar}>Guardar Libro</button>
+                            {/* Mostramos "Cancelar" solo si estamos editando */}
+                            {editingId && (
+                                <button type="button" className={styles.btnCancelar} onClick={resetForm}>
+                                    Cancelar
+                                </button>
+                            )}
+                            <button type="submit" className={styles.btnGuardar}>
+                                {editingId ? "Actualizar Libro" : "Guardar Libro"}
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -243,6 +284,8 @@ const Panel = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                {/* NUEVA COLUMNA */}
+                                <th>Portada</th> 
                                 <th>Título</th>
                                 <th>Autor</th>
                                 <th>ISBN</th>
@@ -250,10 +293,17 @@ const Panel = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* Ahora 'libros' viene de la API */}
                             {libros.map(libro => (
                                 <tr key={libro.id}>
                                     <td>{libro.id}</td>
+                                    {/* NUEVO TD CON LA IMAGEN */}
+                                    <td>
+                                        <img 
+                                            src={`${API_URL}/api/libros/portada/${libro.id}`} 
+                                            alt={`Portada de ${libro.titulo}`}
+                                            className={styles.portadaThumbnail}
+                                        />
+                                    </td>
                                     <td>{libro.titulo}</td>
                                     <td>{libro.autor}</td>
                                     <td>{libro.isbn}</td>

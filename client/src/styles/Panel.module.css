@@ -144,8 +144,10 @@
 
 /* Estilos para el botón de Guardar */
 .formActions {
-    width: 100%; /* Abarca todo el ancho del formulario */
-    text-align: right;
+    width: 100%;
+    display: flex; /* Cambiado para alinear botones */
+    justify-content: flex-end; /* Alinear a la derecha */
+    gap: 1rem; /* Espacio entre botones */
     margin-top: 1.5rem;
 }
 
@@ -163,6 +165,22 @@
     background-color: #218838;
 }
 
+/* --- NUEVO: Estilo para el botón Cancelar Edición --- */
+.btnCancelar {
+    padding: 0.8rem 1.5rem;
+    background-color: #6c757d; /* Gris */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btnCancelar:hover {
+    background-color: #5a6268;
+}
+
+
 /* --- ESTILOS DE LA TABLA --- */
 .listaTabla {
     width: 100%;
@@ -176,6 +194,15 @@
     padding: 0.8rem 1rem;
     text-align: left;
     vertical-align: middle;
+}
+
+/* --- NUEVO: Estilo para la miniatura de la portada --- */
+.portadaThumbnail {
+    width: 60px;
+    height: 80px; /* Ajusta la altura deseada */
+    object-fit: cover; /* Evita que la imagen se deforme */
+    border-radius: 4px;
+    background-color: #f0f0f0; /* Color mientras carga */
 }
 
 .listaTabla th {
