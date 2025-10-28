@@ -1,72 +1,86 @@
+// src/components/MainLibrary.jsx
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "../styles/mainLibrary.module.css";
+import { useNavigate, Link } from "react-router-dom";
+
+// 1. Importamos los estilos como un objeto 'styles'
+import styles from "../styles/MainLibrary.module.css"; 
 
 const MainLibrary = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        navigate("/"); // Redirige a la página de inicio de sesión
+        navigate("/"); // Redirige a la página de inicio
     };
 
     return (
-        <div className={styles.mainlibContainer}>
-        <div className={styles.background}></div>
+        // 2. Usamos los estilos del módulo (styles.clase)
+        <div className={styles.dashboard}>
 
-        <header className={styles.mainlibHeader}>
-            <div className={styles.logoContenedor}>
+        {/* --- HEADER --- */}
+        <header className={styles.dashboard__header}>
+            <div className={styles.dashboard__logoContainer}>
             <img
                 src="/images/logo.png"
                 alt="Logo"
-                className={styles.logoImagen}
+                className={styles.dashboard__logoImg}
             />
-            <h1 className={styles.logo}>The Old Library</h1>
+            <h1 className={styles.dashboard__logoTitle}>The Old Library</h1>
             </div>
 
-            <nav className={styles.mainlibNav}>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Colección</a></li>
-                <li><a href="#">Actividades</a></li>
-                <li><a href="#">Contacto</a></li>
-            </ul>
-            </nav>
-
-            <button onClick={handleLogout} className={styles.logoutBtn}>
-            <i className="fas fa-sign-out-alt"></i> Cerrar sesión
+            <button onClick={handleLogout} className={styles.dashboard__logoutBtn}>
+                <i className="fas fa-sign-out-alt"></i> Cerrar sesión
             </button>
         </header>
 
-        <main className={styles.contenido}>
-            <section className={styles.bienvenida}>
-            <h2>Bienvenido a The Old Library</h2>
+        {/* --- CONTENIDO PRINCIPAL --- */}
+        <main className={styles.dashboard__content}>
+            <section className={styles.dashboard__welcome}>
+            <h2>Bienvenido de vuelta</h2>
             <p>
-                Explora el conocimiento clásico, accede a nuestra colección y
-                disfruta del placer de la lectura.
+                Tu portal al conocimiento te espera. ¿Qué te gustaría hacer hoy?
             </p>
             </section>
 
-            <section className={styles.categorias}>
-            <h3>Categorías destacadas</h3>
-            <div className={styles.grid}>
-                <div className={`${styles.card} ${styles.lectura}`}>
-                <i className="fas fa-book"></i>
-                <span><a href="/menu">Lectura</a></span>
-                </div>
-            </div>
+            <section className={styles.dashboard__gridContainer}>
+            
+            <Link to="/menu" className={styles.dashboardCard}>
+                <i className="fas fa-book-open"></i>
+                <h4 className={styles.dashboardCard__title}>Explorar Colección</h4>
+                <p className={styles.dashboardCard__desc}>
+                Accede a todos nuestros libros y manuscritos.
+                </p>
+            </Link>
+
+            <Link to="/favoritos" className={styles.dashboardCard}>
+                <i className="fas fa-star"></i>
+                <h4 className={styles.dashboardCard__title}>Mis Favoritos</h4>
+                <p className={styles.dashboardCard__desc}>
+                Revisa los títulos que has guardado.
+                </p>
+            </Link>
+
+            <Link to="/eventos" className={styles.dashboardCard}>
+                <i className="fas fa-calendar-alt"></i>
+                <h4 className={styles.dashboardCard__title}>Actividades</h4>
+                <p className={styles.dashboardCard__desc}>
+                Descubre nuestros próximos eventos y talleres.
+                </p>
+            </Link>
+
             </section>
         </main>
 
-        <footer className={styles.footer}>
-            <p className={styles.footerText}>
+        {/* --- FOOTER --- */}
+        <footer className={styles.dashboard__footer}>
+            <p className={styles.dashboard__footerText}>
             © 2025 The Old Library |{" "}
-            <a href="#" className={styles.footerLink}>
+            <a href="#" className={styles.dashboard__footerLink}>
                 Política de privacidad
             </a>
             </p>
         </footer>
         </div>
     );
-    };
+};
 
 export default MainLibrary;

@@ -1,31 +1,7 @@
-/* Variables de colores */
-:root {
-  --primary-color: #5c4b3e;
-  --secondary-color: #f2ebd5;
-  --accent-color: #8b7355;
-  --text-color: #333;
-  --light-text: #fff;
-  --book-card-bg: #f8f5e9;
-  --pagination-active: #5c4b3e;
-}
-
-/* Estilos generales */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Georgia', serif;
-  color: var(--text-color);
-  background-color: var(--secondary-color);
-  background-image: url('/images/old-paper-texture.jpg');
-  background-size: cover;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-}
+/* src/styles/Menu.module.css */
+/* ¡IMPORTANTE! Los estilos globales (:root, *, body) 
+  deben estar en tu 'index.css', no aquí.
+*/
 
 /* Contenedor principal */
 .menu-container {
@@ -34,26 +10,35 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: 0;
+  
+  /* SOLUCIÓN AL FONDO: */
+  /* Esto sobreescribe el fondo verde de 'index.css' */
+  font-family: 'Georgia', serif;
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+  background-image: url('/images/old-paper-texture.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 /* --- ESTILOS DEL ENCABEZADO COMPLETO --- */
 .menu-header {
   background-color: var(--primary-color);
   color: var(--light-text);
-  padding: 1rem 2rem 0 2rem; /* Padding superior, sin padding inferior */
+  padding: 1rem 2rem 0 2rem; 
   display: flex;
-  flex-direction: column; /* Organiza los elementos en columna */
-  gap: 1rem; /* Espacio entre la fila superior y la nav */
+  flex-direction: column; 
+  gap: 1rem; 
 }
 
-/* Nueva clase para la fila superior dentro del header */
 .header-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%; /* Asegura que ocupe todo el ancho disponible */
-  padding-bottom: 1rem; /* Espacio antes de la navegación */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separador sutil */
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo-container {
@@ -66,12 +51,12 @@ body {
   margin-right: 1rem;
 }
 
+/* Nota: 'h1' es global, deberías moverlo a index.css */
 h1 {
   font-size: 1.8rem;
   font-weight: normal;
 }
 
-/* Estilos de búsqueda (sin cambios) */
 .search-container {
   display: flex;
   align-items: center;
@@ -93,11 +78,10 @@ h1 {
   cursor: pointer;
 }
 
-/* Estilos de navegación (ahora dentro del header) */
 .main-nav {
-  background-color: transparent; /* Fondo transparente ya que el header tiene el color */
-  padding: 0.5rem 0; /* Padding solo vertical, horizontal se hereda o ajusta */
-  width: 100%; /* Ocupa todo el ancho del header */
+  background-color: transparent;
+  padding: 0.5rem 0;
+  width: 100%;
 }
 
 .nav-links {
@@ -118,7 +102,6 @@ h1 {
   color: var(--secondary-color);
 }
 
-/* Estilos para la paginación */
 .pagination {
   display: flex;
   justify-content: center;
@@ -145,7 +128,6 @@ h1 {
   background-color: rgba(200, 173, 127, 0.3);
 }
 
-/* Estilos para la sección de libros */
 .books-section {
   padding: 1rem 2rem 2rem 2rem; 
   margin: 0 auto;
@@ -168,20 +150,16 @@ h1 {
   gap: 1.5rem;
 }
 
-/* --- .book-card MODIFICADO --- */
-/* Ahora es un botón, así que reseteamos estilos nativos */
 .book-card {
   background-color: rgba(26, 26, 26, 0.7);
   border: 1px solid var(--secondary-color);
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease;
-  
-  /* --- Propiedades añadidas para resetear el <button> --- */
   padding: 0;
-  font-family: inherit; /* Usa la fuente del body */
+  font-family: inherit;
   cursor: pointer;
-  text-align: left; /* Alinea el texto del autor/título */
+  text-align: left;
 }
 
 .book-card:hover {
@@ -209,50 +187,6 @@ h1 {
   color: var(--text-color);
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .books-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .menu-header {
-    flex-direction: column; /* Ya es columna, pero útil para recordar */
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .header-top-row {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .search-container {
-    width: 100%;
-  }
-  
-  .search-input {
-    width: 100%;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  
-  .books-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .books-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* --- ESTILOS PARA EL FOOTER --- */
 .footer {
   background-color: var(--primary-color);
   color: var(--secondary-color);
@@ -287,52 +221,40 @@ h1 {
 }
 
 /* ================================================= */
-/* --- NUEVOS ESTILOS PARA EL MODAL DE DETALLE --- */
+/* --- ESTILOS DEL MODAL Y OVERLAY (AÑADIDOS) --- */
 /* ================================================= */
 
-/* --- 1. Fondo del Modal (Overlay) --- */
 .modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  
-  /* El efecto de fondo oscuro y blur */
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
-  
-  /* Centrado */
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  z-index: 1000; /* Asegura que esté por encima de todo */
+  z-index: 1000;
   padding: 2rem;
   box-sizing: border-box;
-  
-  /* Animación de entrada */
   animation: fadeIn 0.3s ease;
 }
 
-/* --- 2. Contenido Blanco (Modal) --- */
 .modalContent {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 900px; /* Ancho del prototipo */
-  max-height: 90vh; /* Altura máxima */
-  overflow-y: auto; /* Scroll si el contenido es largo */
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
   padding: 2.5rem;
   box-sizing: border-box;
-  
-  /* Animación de entrada */
   animation: zoomIn 0.3s ease;
 }
 
-/* --- 3. Botón de Cerrar --- */
 .closeButton {
   position: absolute;
   top: 1rem;
@@ -345,13 +267,12 @@ h1 {
   padding: 0.5rem;
   line-height: 1;
   transition: color 0.2s;
-  z-index: 10; /* Por si acaso */
+  z-index: 10;
 }
 .closeButton:hover {
   color: #000;
 }
 
-/* --- 4. Breadcrumb (Migas de pan) --- */
 .breadcrumb {
   font-size: 0.9rem;
   color: #666;
@@ -360,15 +281,13 @@ h1 {
   padding-bottom: 1rem;
 }
 
-/* --- 5. Contenido Principal (2 columnas) --- */
 .detalleMain {
   display: flex;
   gap: 2.5rem;
 }
 
-/* Columna Izquierda: Portada */
 .detalleCover {
-  flex-basis: 35%; /* Ancho de la columna de portada */
+  flex-basis: 35%;
   flex-shrink: 0;
 }
 .detalleCover img {
@@ -379,7 +298,6 @@ h1 {
   object-fit: cover;
 }
 
-/* Columna Derecha: Información */
 .detalleInfo {
   flex-basis: 65%;
   display: flex;
@@ -417,11 +335,10 @@ h1 {
   font-size: 1rem;
   color: #555;
   line-height: 1.6;
-  flex-grow: 1; /* Empuja los botones hacia abajo */
-  min-height: 100px; /* Asegura un espacio mínimo */
+  flex-grow: 1;
+  min-height: 100px;
 }
 
-/* --- 6. Botones de Acción --- */
 .detalleActions {
   margin-top: 2rem;
   display: flex;
@@ -433,7 +350,7 @@ h1 {
   align-items: center;
   gap: 0.5rem;
   padding: 0.8rem 1.5rem;
-  background-color: #007bff; /* Azul primario */
+  background-color: #007bff;
   color: white;
   text-decoration: none;
   border-radius: 5px;
@@ -447,29 +364,6 @@ h1 {
   background-color: #0056b3;
 }
 
-/* --- 7. Responsive del Modal para Móviles --- */
-@media (max-width: 768px) {
-  .detalleMain {
-    flex-direction: column; /* Apila las columnas */
-    gap: 1.5rem;
-  }
-  
-  .detalleCover {
-    max-width: 250px; /* Evita que la portada sea gigante */
-    margin: 0 auto;
-  }
-  
-  .modalContent {
-    padding: 2rem 1.5rem;
-    max-height: 95vh; /* Más altura en móviles */
-  }
-  
-  .detalleInfo h1 {
-    font-size: 1.8rem;
-  }
-}
-
-/* --- 8. Overlay de "Cargando..." --- */
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -481,13 +375,12 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1001; /* Encima del modal */
+  z-index: 1001;
   font-size: 1.5rem;
   color: #000;
   font-family: 'Georgia', serif;
 }
 
-/* --- Animaciones del Modal --- */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -496,4 +389,67 @@ h1 {
 @keyframes zoomIn {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* --- Media Queries --- */
+@media (max-width: 1024px) {
+  .books-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-widget: 768px) {
+  .menu-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .header-top-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-container {
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .books-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Responsive del Modal */
+  .detalleMain {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .detalleCover {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  .modalContent {
+    padding: 2rem 1.5rem;
+    max-height: 95vh;
+  }
+  
+  .detalleInfo h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

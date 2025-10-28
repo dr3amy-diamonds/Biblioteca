@@ -1,4 +1,4 @@
-    // Home.jsx
+
     import React from 'react';
     import { Link } from 'react-router-dom';
     import { FaUserCircle } from 'react-icons/fa';
@@ -26,7 +26,7 @@ const Home = () => {
         // 1. El bloque .home se vuelve el contenedor principal
         <div className="home"> 
         
-        <Link to="/login" className="home__login-button">
+        <Link to="/LoginRegister" className="home__login-button">
             <FaUserCircle className="home__login-icon" />
             Iniciar Sesión
         </Link>

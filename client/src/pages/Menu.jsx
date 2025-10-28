@@ -1,21 +1,19 @@
+// Menu.jsx (Corregido)
 import React, { useState, useEffect } from "react";
-import '../styles/Menu.css';
 import { Link } from "react-router-dom";
-// 1. IMPORTAMOS EL NUEVO COMPONENTE MODAL
+// 1. IMPORTAMOS EL MÓDULO (styles)
+import styles from "../styles/Menu.module.css"; 
 import LibroDetalle from "./LibroDetalle"; 
 
 const API_URL = "http://localhost:3001";
 const MAX_LIBROS_POR_PAGINA = 15; 
 
 const Menu = () => {
-  // Estado para la lista de libros (sin cambios)
+  // ... (toda tu lógica de 'useState', 'useEffect', 'handleBookClick' no cambia) ...
   const [libros, setLibros] = useState([]);
-  
-  // 2. NUEVOS ESTADOS PARA MANEJAR EL MODAL
-  const [selectedLibro, setSelectedLibro] = useState(null); // Guarda los datos del libro clickeado
-  const [isLoadingDetalle, setIsLoadingDetalle] = useState(false); // Muestra "Cargando..."
+  const [selectedLibro, setSelectedLibro] = useState(null); 
+  const [isLoadingDetalle, setIsLoadingDetalle] = useState(false);
 
-  // Carga la lista de libros (sin cambios)
   useEffect(() => {
     const fetchLibros = async () => {
       try {
@@ -33,107 +31,101 @@ const Menu = () => {
     fetchLibros();
   }, []); 
 
-  // 3. NUEVA FUNCIÓN: Se llama al hacer clic en una tarjeta
   const handleBookClick = async (libroId) => {
-    setIsLoadingDetalle(true); // Muestra el overlay de carga
+    setIsLoadingDetalle(true); 
     setSelectedLibro(null);
     try {
-      // Llamamos a la API para obtener los *detalles completos* del libro
-      // (Esta es la ruta que ya usamos en Panel.jsx para editar)
       const response = await fetch(`${API_URL}/api/libros/${libroId}`);
       const result = await response.json();
-
       if (result.success) {
-        setSelectedLibro(result.data); // Guardamos los datos completos en el estado
+        setSelectedLibro(result.data); 
       } else {
         alert("Error al cargar los detalles del libro.");
       }
     } catch (err) {
       alert("Error de red al cargar detalles.");
     }
-    setIsLoadingDetalle(false); // Oculta el overlay de carga
+    setIsLoadingDetalle(false); 
   };
 
-  // 4. NUEVA FUNCIÓN: Para cerrar el modal
   const handleCloseDetalle = () => {
     setSelectedLibro(null);
   };
 
   return (
-    <div className="menu-container">
-      
-      {/* --- ENCABEZADO (sin cambios) --- */}
-      <header className="menu-header">
-        <div className="header-top-row">
-          <div className="logo-container">
-            <img src="/images/logo.png" alt="The Old Library Logo" className="logo" />
-            <h1>The Old Library</h1>
+    <>
+      {/* 2. CORRECCIÓN: Usamos styles['clase-con-guion'] */}
+      <div className={styles['menu-container']}>
+        
+        <header className={styles['menu-header']}>
+          <div className={styles['header-top-row']}>
+            <div className={styles['logo-container']}>
+              {/* 'logo' no tiene guion, así que styles.logo está bien */}
+              <img src="/images/logo.png" alt="The Old Library Logo" className={styles.logo} />
+              <h1>The Old Library</h1>
+            </div>
+            <div className={styles['search-container']}>
+              <input type="text" placeholder="Buscar un libro..." className={styles['search-input']} />
+              <button className={styles['search-button']}>
+                <i className="search-icon">🔍</i>
+              </button>
+            </div>
           </div>
-          <div className="search-container">
-            <input type="text" placeholder="Buscar un libro..." className="search-input" />
-            <button className="search-button">
-              <i className="search-icon">🔍</i>
-            </button>
+          <nav className={styles['main-nav']}>
+            <ul className={styles['nav-links']}>
+              <li><Link to="/MainLibrary" className={styles['nav-link']}>Inicio</Link></li>
+              <li><Link to="/categorias" className={styles['nav-link']}>Categorías</Link></li>
+              <li><Link to="/colecciones" className={styles['nav-link']}>Colecciones</Link></li>
+              <li><Link to="/recomendados" className={styles['nav-link']}>Recomendados</Link></li>
+            </ul>
+          </nav>
+        </header>
+        
+        {libros.length > MAX_LIBROS_POR_PAGINA && (
+          // 'pagination' no tiene guion
+          <div className={styles.pagination}>
+            {/* ... */}
           </div>
-        </div>
-        <nav className="main-nav">
-          <ul className="nav-links">
-            <li><Link to="/MainLibrary" className="nav-link">Inicio</Link></li>
-            <li><Link to="/categorias" className="nav-link">Categorías</Link></li>
-            <li><Link to="/colecciones" className="nav-link">Colecciones</Link></li>
-            <li><Link to="/recomendados" className="nav-link">Recomendados</Link></li>
-          </ul>
-        </nav>
-      </header>
-      
-      {/* --- PAGINACIÓN (sin cambios) --- */}
-      {libros.length > MAX_LIBROS_POR_PAGINA && (
-        <div className="pagination">
-          {/* ... */}
-        </div>
-      )}
-      
-      {/* --- SECCIÓN DE LIBROS --- */}
-      <section className="books-section">
-        <h2>Bienvenidos</h2>
-        <div className="books-grid">
-          {libros.map(libro => (
-            // 5. MODIFICACIÓN: La tarjeta ahora es un <button>
-            <button 
-              key={libro.id} 
-              className="book-card" // Usamos la clase CSS existente
-              onClick={() => handleBookClick(libro.id)} // Llama a la nueva función
-            >
-              <img 
-                src={`${API_URL}/api/libros/portada/${libro.id}`} 
-                alt={libro.titulo} 
-                className="book-image" 
-              />
-              <div className="book-info">
-                <h3 className="book-title">{libro.titulo}</h3>
-                <p className="book-author">{libro.autor}</p>
-              </div>
-            </button>
-          ))}
-        </div>
-        {libros.length === 0 && <p>Cargando libros o no hay ninguno disponible...</p>}
-      </section>
-      
-      {/* --- FOOTER (sin cambios) --- */}
-      <footer className="footer">
-        {/* ... */}
-      </footer>
-      
-      {/* --- 6. RENDERIZADO CONDICIONAL DEL MODAL --- */}
-      
-      {/* Muestra "Cargando..." mientras se buscan los detalles */}
+        )}
+        
+        <section className={styles['books-section']}>
+          <h2>Bienvenidos</h2>
+          <div className={styles['books-grid']}>
+            {libros.map(libro => (
+              <button 
+                key={libro.id} 
+                className={styles['book-card']}
+                onClick={() => handleBookClick(libro.id)}
+              >
+                <img 
+                  src={`${API_URL}/api/libros/portada/${libro.id}`} 
+                  alt={libro.titulo} 
+                  className={styles['book-image']} 
+                />
+                <div className={styles['book-info']}>
+                  <h3 className={styles['book-title']}>{libro.titulo}</h3>
+                  <p className={styles['book-author']}>{libro.autor}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+          {libros.length === 0 && <p>Cargando libros o no hay ninguno disponible...</p>}
+        </section>
+        
+        {/* 'footer' no tiene guion */}
+        <footer className={styles.footer}>
+          {/* ... (asegúrate de que las clases del footer también usen 'styles.') ... */}
+        </footer>
+        
+      </div> 
+
+      {/* Los overlays están fuera y usan corchetes */}
       {isLoadingDetalle && (
-        <div className="loading-overlay">
+        <div className={styles['loading-overlay']}>
           <p>Cargando detalles...</p>
         </div>
       )}
       
-      {/* Muestra el modal si hay un libro seleccionado */}
       {selectedLibro && (
         <LibroDetalle 
           libro={selectedLibro} 
@@ -142,7 +134,7 @@ const Menu = () => {
         />
       )}
       
-    </div>
+    </> 
   );
 };
 

@@ -1,7 +1,9 @@
+// src/components/LibroDetalle.jsx
 import React from 'react';
-// 1. ELIMINAMOS la importación de .module.css
-// import styles from '../styles/LibroDetalle.module.css'; 
-// (No necesitamos importar Menu.css aquí porque ya está importado en Menu.jsx)
+
+// 1. ¡IMPORTANTE! Importamos el módulo de estilos de Menu
+// (Aquí es donde están guardadas las clases .modalOverlay, .modalContent, etc.)
+import styles from '../styles/Menu.module.css'; 
 
 // --- Iconos SVG Simples ---
 const IconDownload = () => (
@@ -23,57 +25,58 @@ const LibroDetalle = ({ libro, onClose, apiUrl }) => {
 
     if (!libro) return null;
 
-    // 2. CAMBIAMOS {styles.clase} por "clase"
+    // 2. CAMBIAMOS "clase" por {styles.clase}
+    // (Usamos brackets [] para las clases con guiones)
     return (
-        <div className="modalOverlay" onClick={onClose}>
+        <div className={styles.modalOverlay} onClick={onClose}>
         
-        <div className="modalContent" onClick={handleContentClick}>
+        <div className={styles.modalContent} onClick={handleContentClick}>
             
-            <button className="closeButton" onClick={onClose}>
+            <button className={styles.closeButton} onClick={onClose}>
             <IconClose />
             </button>
             
-            <nav className="breadcrumb">
+            <nav className={styles.breadcrumb}>
             Inicio / Categoría / {libro.genero || "General"}
             </nav>
 
-            <div className="detalleMain">
+            <div className={styles.detalleMain}>
             
-            <div className="detalleCover">
+            <div className={styles.detalleCover}>
                 <img 
                 src={`${apiUrl}/api/libros/portada/${libro.id}`} 
                 alt={`Portada de ${libro.titulo}`} 
                 />
             </div>
 
-            <div className="detalleInfo">
+            <div className={styles.detalleInfo}>
                 <h1>{libro.titulo}</h1>
                 
-                <p className="infoItem">
+                <p className={styles.infoItem}>
                 <strong>Autor(es):</strong> {libro.autor || "No especificado"}
                 </p>
-                <p className="infoItem">
+                <p className={styles.infoItem}>
                 <strong>Año de Publicación:</strong> {libro.ano_publicacion || "N/A"}
                 </p>
-                <p className="infoItem">
+                <p className={styles.infoItem}>
                 <strong>Género:</strong> {libro.genero || "No especificado"}
                 </p>
-                <p className="infoItem">
+                <p className={styles.infoItem}>
                 <strong>Editorial:</strong> {libro.editorial || "No especificado"}
                 </p>
-                <p className="infoItem">
+                <p className={styles.infoItem}>
                 <strong>ISBN:</strong> {libro.isbn || "No especificado"}
                 </p>
 
                 <h3>Sinopsis</h3>
-                <p className="sinopsis">
+                <p className={styles.sinopsis}>
                 {libro.descripcion || "No hay descripción disponible."}
                 </p>
 
-                <div className="detalleActions">
+                <div className={styles.detalleActions}>
                 <a 
                     href={`${apiUrl}/api/libros/archivo/${libro.id}`}
-                    className="btnDescargar"
+                    className={styles.btnDescargar}
                     download
                 >
                     Descargar (PDF) <IconDownload />

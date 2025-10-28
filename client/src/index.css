@@ -1,6 +1,17 @@
 /* src/styles/index.css */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display.swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display.swap');
+
+/* Variables de color globales (movidas desde Menu.css) */
+:root {
+  --primary-color: #5c4b3e;
+  --secondary-color: #f2ebd5;
+  --accent-color: #8b7355;
+  --text-color: #333;
+  --light-text: #fff;
+  --book-card-bg: #f8f5e9;
+  --pagination-active: #5c4b3e;
+}
 
 /* Reset básico */
 * {
@@ -14,11 +25,11 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    /* Un color de fondo base por si falla la imagen */
+    /* Este es tu fondo global verde oscuro */
     background-color: #101e1a; 
+    color: var(--text-color);
 }
 
-/* Asignamos la fuente de los títulos */
 h1, h2, h3, h4 {
     font-family: "Playfair Display", serif;
 }

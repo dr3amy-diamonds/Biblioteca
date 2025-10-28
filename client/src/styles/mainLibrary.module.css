@@ -1,34 +1,8 @@
-/* Reset y fuentes */
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Cormorant Garamond", serif;
-    }
-
-    html,
-    body {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    color: #f4efea;
-    scroll-behavior: smooth;
-    }
-
-    h1, h2, h3, h4 {
-    font-family: "Playfair Display", serif;
-    }
+    /* src/styles/MainLibrary.module.css */
+    /* ¡LOS ESTILOS GLOBALES (*, html, body...) DEBEN IR EN 'index.css'! */
 
     /* Fondo principal */
-    .mainlibContainer {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    }
-
-    /* Fondo oscurecido */
-    .mainlibContainer {
+    .dashboard {
     min-height: 100vh;
     background: url("/images/Biblioteca.jpg") no-repeat center center / cover;
     display: flex;
@@ -37,51 +11,54 @@
     font-family: "Cormorant Garamond", serif;
     }
 
-    /* Header */
-    .mainlibHeader {
+    /* Header (usando el "glass" oscuro de tu archivo anterior) */
+    .dashboard__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1rem;
-    background: rgba(26, 26, 26, 0.8);
+    padding: 1.2rem 2rem;
+    background: rgba(26, 26, 26, 0.8); /* <-- Tuyo */
     border-bottom: 1px solid #c8ad7f;
+    backdrop-filter: blur(5px); /* <-- Efecto glass */
     }
 
-    .logoContenedor {
+    .dashboard__logoContainer {
     display: flex;
     align-items: center;
     gap: 0.8rem;
     }
 
-    .logoImagen {
+    .dashboard__logoImg {
     width: 45px;
     }
 
-    .logo {
+    .dashboard__logoTitle {
     font-size: 2rem;
     color: #c8ad7f;
     }
 
-    .mainlibNav ul {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-    }
-
-    .mainlibNav a {
-    text-decoration: none;
+    /* Botón de Logout */
+    .dashboard__logoutBtn {
+    background-color: #3b2a1d;
     color: #f4efea;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     }
-
-    .mainlibNav a:hover {
-    color: #c8ad7f;
+    .dashboard__logoutBtn:hover {
+    background-color: #28190f;
     }
 
     /* Contenido */
-    .contenido {
-    flex: 1;
+    .dashboard__content {
+    flex: 1; /* Empuja el footer hacia abajo */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,230 +69,107 @@
     }
 
     /* Bienvenida */
-    .bienvenida {
+    .dashboard__welcome {
     text-align: center;
     margin-bottom: 3rem;
     }
 
-    .bienvenida h2 {
-    font-size: 2.5rem;
+    .dashboard__welcome h2 {
+    font-size: 2.8rem;
     margin-bottom: 1rem;
+    color: #f4efea;
     }
 
-    .bienvenida p {
-    font-size: 1.2rem;
-    font-family: "Raleway", sans-serif;
+    .dashboard__welcome p {
+    font-size: 1.3rem;
     color: #d7cab9;
     }
 
-    /* Categorías */
-    .categorias h3 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #f4efea;
-    }
-
-    .grid {
+    /* Grid de Categorías/Tarjetas */
+    .dashboard__gridContainer {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     }
 
-    .card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #8b7355;
+    /* --- ESTILO DE TARJETA "GLASS" (EL CAMBIO QUE PEDISTE) --- */
+    .dashboardCard {
+    background: rgba(255, 255, 255, 0.05); /* <-- Tuyo */
+    border: 1px solid #8b7355;           /* <-- Tuyo */
+    backdrop-filter: blur(5px);          /* <-- Efecto glass */
     border-radius: 12px;
     padding: 2rem;
     text-align: center;
-    font-size: 1.1rem;
-    font-family: "Raleway", sans-serif;
     color: #f4efea;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
     cursor: pointer;
+    text-decoration: none;
     }
 
-    .card i {
+    .dashboardCard:hover {
+    background: rgba(255, 255, 255, 0.1); /* <-- Tuyo (hover transparente) */
+    transform: translateY(-5px);
+    border-color: #c8ad7f; /* Mantenemos el borde dorado del hover */
+    }
+
+    .dashboardCard i {
     display: block;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #f3dab3; /* <-- Tuyo */
+    }
+
+    .dashboardCard__title {
+    font-size: 1.5rem;
+    color: #f4efea;
     margin-bottom: 0.5rem;
     }
 
-    .lectura i,
-    .formacion i,
-    .resenas i,
-    .eventos i {
-    color: #f3dab3;
+    .dashboardCard__desc {
+    font-size: 1rem;
+    color: #d7cab9;
+    line-height: 1.5;
     }
 
-    .card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-5px);
-    }
-
-    /* Footer */
-    .footer {
+    /* Footer (BEM) */
+    .dashboard__footer {
     background-color: #101e1a;
     text-align: center;
-    padding: 0.5rem;
+    padding: 2rem;
+    align-self: stretch; 
     }
 
-    .footerText {
+    .dashboard__footerText {
     color: #d9d3c9;
     font-size: 0.9rem;
     }
 
-    .footerLink {
+    .dashboard__footerLink {
     color: #d9cbb3;
     text-decoration: underline;
     }
 
-    .footerLink:hover {
+    .dashboard__footerLink:hover {
     text-decoration: none;
     }
 
-    .logoutBtn {
-    background-color: #3b2a1d;
-    color: #f4efea;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    margin-left: 1rem;
-    transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    }
-
-.logoutBtn:hover {
-    background-color: #28190f;
-}
-
-@media screen and (max-width: 768px) {
-    .logoutBtn {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .mainlibHeader {
-        flex-wrap: wrap;
+    /* Media Queries (Actualizadas a BEM) */
+    @media screen and (max-width: 768px) {
+    .dashboard__header {
+        flex-direction: column; 
         gap: 1rem;
-        align-items: center;
-    }
-
-    .mainlibNav ul {
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .contenido {
         padding: 1rem;
-        max-width: 100%;
     }
-
-    .bienvenida h2 {
+    
+    .dashboard__content {
+        padding: 1.5rem;
+    }
+    
+    .dashboard__welcome h2 {
         font-size: 2rem;
     }
-
-    .bienvenida p {
-        font-size: 1rem;
+    
+    .dashboard__gridContainer {
+        grid-template-columns: 1fr; 
     }
-
-    .grid {
-        gap: 1rem;
     }
-
-    .card {
-        padding: 1.2rem;
-        font-size: 1rem;
-    }
-
-    .footerText {
-        font-size: 0.85rem;
-    }
-}
-@media (max-width: 600px) {
-    .mainlibContainer {
-        background-image: url("/images/Biblioteca-movil.webp"); /* Versión optimizada para móviles */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: scroll; /* Evita errores con background fijo */
-        background-color: #1a1a1a; /* Color de respaldo por si la imagen falla */
-    }
-
-    .mainlibHeader {
-        flex-direction: column;
-        align-items: center;
-        padding: 0.7rem 0.5rem;
-        gap: 0.5rem;
-    }
-
-    .logoContenedor {
-        gap: 0.5rem;
-    }
-
-    .logoImagen {
-        width: 36px;
-    }
-
-    .logo {
-        font-size: 1.3rem;
-    }
-
-    .mainlibNav ul {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        width: 100%;
-        padding: 0;
-    }
-
-    .contenido {
-        padding: 0.5rem;
-        max-width: 100vw;
-    }
-
-    .bienvenida h2 {
-        font-size: 1.3rem;
-    }
-
-    .bienvenida p {
-        font-size: 0.95rem;
-    }
-
-    .categorias h3 {
-        font-size: 1.1rem;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-        gap: 0.7rem;
-    }
-
-    .card {
-        padding: 0.8rem;
-        font-size: 0.95rem;
-    }
-
-    .footer {
-        padding: 0.3rem;
-    }
-
-    .footerText {
-        font-size: 0.8rem;
-    }
-
-    .logoutBtn {
-        padding: 0.4rem 0.7rem;
-        font-size: 0.85rem;
-        margin-left: 0;
-        margin-top: 0.5rem;
-    }
-}
