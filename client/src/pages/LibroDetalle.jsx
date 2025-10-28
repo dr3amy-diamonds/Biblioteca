@@ -34,7 +34,7 @@ const LibroDetalle = ({ libro, onClose, apiUrl }) => {
             </button>
             
             <nav className="breadcrumb">
-            Inicio / Catálogo / {libro.genero || "General"}
+            Inicio / Categoría / {libro.genero || "General"}
             </nav>
 
             <div className="detalleMain">

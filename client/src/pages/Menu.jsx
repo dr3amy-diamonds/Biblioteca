@@ -66,7 +66,7 @@ const Menu = () => {
       <header className="menu-header">
         <div className="header-top-row">
           <div className="logo-container">
-            <img src="/images/logo.svg" alt="The Old Library Logo" className="logo" />
+            <img src="/images/logo.png" alt="The Old Library Logo" className="logo" />
             <h1>The Old Library</h1>
           </div>
           <div className="search-container">
@@ -80,11 +80,8 @@ const Menu = () => {
           <ul className="nav-links">
             <li><Link to="/MainLibrary" className="nav-link">Inicio</Link></li>
             <li><Link to="/categorias" className="nav-link">Categorías</Link></li>
-            <li><Link to="/libros" className="nav-link">Libros</Link></li>
-            <li><Link to="/autores" className="nav-link">Autores</Link></li>
-            <li><Link to="/categories" className="nav-link">Categories</Link></li>
             <li><Link to="/colecciones" className="nav-link">Colecciones</Link></li>
-            <li><Link to="/recomendados" className="nav-link">Recommutadoo</Link></li>
+            <li><Link to="/recomendados" className="nav-link">Recomendados</Link></li>
           </ul>
         </nav>
       </header>
@@ -98,7 +95,7 @@ const Menu = () => {
       
       {/* --- SECCIÓN DE LIBROS --- */}
       <section className="books-section">
-        <h2>LIBROS POR NÚMERO DE PÁGINA</h2>
+        <h2>Bienvenidos</h2>
         <div className="books-grid">
           {libros.map(libro => (
             // 5. MODIFICACIÓN: La tarjeta ahora es un <button>

@@ -1,0 +1,121 @@
+/* src/styles/Home.css */
+
+    /*
+    * BLOQUE: .home
+    * Lo estilizamos como el .header de tu inspiración
+    */
+    .home {
+    position: relative; /* Para el botón de login */
+    background-image: url("/images/background.png") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    color: #f4efea; /* Texto principal claro */
+    height: 100vh; /* Cambiado de min-height a height para evitar scroll */
+    padding: 2rem;
+    box-sizing: border-box;
+    
+    /* Centra el contenido como en .header__contenedor */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden; /* Previene cualquier desbordamiento */
+    }
+
+    /*
+    * ELEMENTO: .home__login-button
+    * Lo estilizamos como un item de .header__nav-item
+    */
+    .home__login-button {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    
+    color: #f4efea;
+    background-color: rgba(20, 15, 10, 0.7); /* Fondo sutil */
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px); /* Efecto glass */
+    }
+
+    .home__login-button:hover {
+    color: #d2b48c; /* Dorado al pasar el mouse */
+    background-color: rgba(20, 15, 10, 0.9);
+    }
+
+    .home__login-icon {
+    font-size: 1.2rem;
+    }
+
+    /*
+    * ELEMENTO: .home__content
+    * Este es el contenedor del texto y el acordeón.
+    * Ya no es un panel blanco, ahora es transparente.
+    */
+    .home__content {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2.5rem;
+    
+    /* Eliminamos fondos blancos y bordes */
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    border: none;
+    
+    display: flex;
+    flex-direction: column;
+    padding-top: 5rem; /* Espacio para el botón de login */
+    gap: 1rem;
+    }
+
+    /*
+    * ELEMENTO: .home__welcome-text
+    * Contenedor para los títulos
+    */
+    .home__welcome-text {
+    text-align: center;
+    margin-bottom: 2rem;
+    }
+
+    /*
+    * ELEMENTO: .home__title
+    * Estilizado como .header__title
+    */
+    .home__title {
+    font-size: 4.5rem; /* Un poco más pequeño que 5rem */
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    }
+
+    /*
+    * ELEMENTO: .home__subtitle
+    * Estilizado como .header__subtitle
+    */
+    .home__subtitle {
+    font-size: 1.8rem; /* Un poco más pequeño que 2rem */
+    font-weight: 300;
+    margin: 0;
+    }
+
+    /*
+    * ELEMENTO: .home__accordion-section
+    * El contenedor del acordeón
+    */
+    .home__accordion-section {
+    width: 100%;
+    }
+/* --- ESTILOS DEL FOOTER --- */
+/* (Añade esto al final de Home.css) */

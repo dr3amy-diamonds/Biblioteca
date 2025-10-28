@@ -59,7 +59,6 @@ router.post("/api/libros", upload.fields([
 });
 
 // --- READ (Lista) (Sin cambios) ---
-// La portada la cargaremos con una ruta separada
 router.get("/api/libros", (req, res) => {
     const sql = "SELECT id, titulo, autor, isbn FROM libros";
     db.all(sql, [], (err, rows) => {
@@ -71,8 +70,7 @@ router.get("/api/libros", (req, res) => {
     });
 });
 
-// --- NUEVO: READ (Portada) ---
-// Esta ruta especial sirve la imagen BLOB de la portada
+// --- READ (Portada) (Mejora menor) ---
 router.get("/api/libros/portada/:id", (req, res) => {
     const sql = "SELECT tipo_portada, portada_contenido FROM libros WHERE id = ?";
     
@@ -84,14 +82,32 @@ router.get("/api/libros/portada/:id", (req, res) => {
             res.setHeader('Content-Type', row.tipo_portada || 'image/jpeg');
             res.send(row.portada_contenido);
         } else {
-            // Puedes enviar una imagen placeholder si no se encuentra
-            res.status(404).send("Portada no encontrada");
+            // CORREGIDO: Enviar un 404 vacío es mejor que enviar texto
+            res.status(404).send(); 
         }
     });
 });
 
-// --- NUEVO: READ (Uno solo para Editar) ---
-// Trae todos los datos de un libro (EXCEPTO los BLOBs pesados)
+// --- READ (Archivo del Libro) (Sin cambios) ---
+router.get("/api/libros/archivo/:id", (req, res) => {
+    const sql = "SELECT nombre_archivo, tipo_archivo, archivo_contenido FROM libros WHERE id = ?";
+    
+    db.get(sql, [req.params.id], (err, row) => {
+        if (err) {
+            console.error("❌ Error al buscar archivo:", err.message);
+            return res.status(500).send("Error del servidor");
+        }
+        if (row && row.archivo_contenido) {
+            res.setHeader('Content-Type', row.tipo_archivo || 'application/octet-stream');
+            res.setHeader('Content-Disposition', `attachment; filename="${row.nombre_archivo || 'libro.pdf'}"`);
+            res.send(row.archivo_contenido);
+        } else {
+            res.status(404).send("Archivo no encontrado");
+        }
+    });
+});
+
+// --- READ (Uno solo para Editar) (Sin cambios) ---
 router.get("/api/libros/:id", (req, res) => {
     const sql = `
         SELECT id, titulo, autor, descripcion, isbn, editorial, 
@@ -114,7 +130,7 @@ router.get("/api/libros/:id", (req, res) => {
 });
 
 
-// --- NUEVO: UPDATE (Actualizar) ---
+// --- UPDATE (Actualizar) (¡CORREGIDO!) ---
 router.put("/api/libros/:id", upload.fields([
     { name: 'portada', maxCount: 1 },
     { name: 'archivoLibro', maxCount: 1 }
@@ -126,7 +142,7 @@ router.put("/api/libros/:id", upload.fields([
         const archivoFile = req.files.archivoLibro ? req.files.archivoLibro[0] : null;
         const data = req.body;
 
-        // 1. Empezamos la query de actualización solo con los campos de texto
+        // 1. Empezamos la query (sin cambios)
         let sql = `
             UPDATE libros SET 
                 titulo = ?, autor = ?, descripcion = ?, isbn = ?, editorial = ?, 
@@ -140,23 +156,24 @@ router.put("/api/libros/:id", upload.fields([
             data.formato, data.estado, data.destacado
         ];
 
-        // 2. Si el usuario subió una NUEVA portada, la añadimos a la query
+        // 2. Añadir portada (sin cambios)
         if (portadaFile) {
             sql += ", nombre_portada = ?, tipo_portada = ?, portada_contenido = ?";
             params.push(portadaFile.originalname, portadaFile.mimetype, portadaFile.buffer);
         }
         
-        // 3. Si el usuario subió un NUEVO archivo de libro, lo añadimos
+        // 3. Añadir archivo de libro (¡CORREGIDO!)
         if (archivoFile) {
+            // CORREGIDO: Se quitó el '=' duplicado en 'tipo_archivo = ?'
             sql += ", nombre_archivo = ?, tipo_archivo = ?, archivo_contenido = ?";
             params.push(archivoFile.originalname, archivoFile.mimetype, archivoFile.buffer);
         }
 
-        // 4. Cerramos la query con el WHERE
+        // 4. Cerramos la query (sin cambios)
         sql += " WHERE id = ?";
         params.push(id);
 
-        // 5. Ejecutamos
+        // 5. Ejecutamos (sin cambios)
         db.run(sql, params, function(err) {
             if (err) {
                 console.error("❌ Error al actualizar libro:", err.message);
@@ -193,8 +210,44 @@ router.delete("/api/libros/:id", (req, res) => {
 // =========================================
 // RUTAS DE USUARIOS (Sin cambios)
 // =========================================
-router.post("/register", async (req, res) => { /* ...código existente... */ });
-router.post("/login", (req, res) => { /* ...código existente... */ });
+router.post("/register", async (req, res) => {
+    const { full_name, email, password } = req.body;
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const query = `INSERT INTO usuarios (full_name, email, password) VALUES (?, ?, ?)`;
+        db.run(query, [full_name, email, hashedPassword], function (err) {
+            if (err) {
+                if (err.message.includes("UNIQUE constraint failed")) {
+                    return res.json({ success: false, message: "El correo ya está registrado." });
+                }
+                console.error("❌ Error en registro:", err.message);
+                return res.status(500).json({ success: false });
+            }
+            return res.json({ success: true });
+        });
+    } catch (err) {
+        console.error("❌ Error al encriptar contraseña:", err.message);
+        return res.status(500).json({ success: false });
+    }
+});
+
+router.post("/login", (req, res) => {
+    const { email, password } = req.body;
+    const query = `SELECT full_name, password FROM usuarios WHERE email = ?`;
+    db.get(query, [email], async (err, row) => {
+        if (err) {
+            console.error("❌ Error en login:", err.message);
+            return res.status(500).json({ success: false, error: "Error interno" });
+        }
+        if (row) {
+            const isMatch = await bcrypt.compare(password, row.password);
+            if (isMatch) {
+                return res.json({ success: true, name: row.full_name });
+            }
+        }
+        return res.json({ success: false, message: "Correo o contraseña incorrectos" });
+    });
+});
 
 
 module.exports = router;

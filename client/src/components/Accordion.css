@@ -1,0 +1,66 @@
+    /* src/components/Accordion.css */
+
+    .accordion__item {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: none;
+    /* Fondo oscuro semi-transparente para el acordeón */
+    background-color: rgba(20, 15, 10, 0.7);
+    backdrop-filter: blur(5px);
+    margin-bottom: 10px;
+    }
+
+    .accordion__title {
+    margin: 0;
+    padding: 1.2rem 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600; /* Le damos más peso */
+    cursor: pointer;
+    color: #f4efea; /* Texto claro */
+    user-select: none;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .accordion__title:hover {
+    /* Al pasar el mouse, se oscurece un poco */
+    background-color: rgba(20, 15, 10, 0.9);
+    }
+
+    .accordion__icon {
+    transition: transform 0.3s ease;
+    font-size: 1.5rem;
+    font-weight: 300;
+    }
+
+    .accordion__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    /* El contenido tendrá el texto de párrafo */
+    color: #d9d3c9; 
+    font-size: 1.1rem;
+    line-height: 1.6;
+    }
+
+    /* El padding va en el div interno para una animación limpia */
+    .accordion__content-inner {
+    padding: 0 1.5rem;
+    }
+
+    /* --- Lógica de apertura (con BEM) --- */
+
+    .accordion__item--active .accordion__content {
+    max-height: 500px; /* Altura suficiente */
+    }
+
+    .accordion__item--active .accordion__content-inner {
+    padding: 1rem 1.5rem 1.5rem 1.5rem; /* Padding completo al abrir */
+    }
+
+    .accordion__item--active .accordion__icon {
+    transform: rotate(45deg);
+    }

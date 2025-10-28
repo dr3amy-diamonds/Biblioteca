@@ -1,98 +1,62 @@
-import React from "react";
-import "../styles/index.css";
-import Accordion from "../components/Accordion";
-import { Link } from "react-router-dom";
+    // Home.jsx
+    import React from 'react';
+    import { Link } from 'react-router-dom';
+    import { FaUserCircle } from 'react-icons/fa';
+    import Accordion from '../components/Accordion'; 
+    import '../styles/Home.css'; // Sigue importando sus estilos
+
+    // (El contenido de accordionItems no cambia)
+    const accordionItems = [
+        {
+            title: 'Colecciones',
+            content: 'Explora nuestras colecciones curadas, desde manuscritos antiguos hasta bestsellers modernos. Cada colección está diseñada para guiarte a través de géneros y temas específicos.'
+        },
+        {
+            title: 'Recomendados',
+            content: 'Descubre lecturas recomendadas por nuestros bibliotecarios y la comunidad. Encuentra tu próxima gran aventura literaria aquí.'
+        },
+        {
+            title: 'Sobre la Biblioteca',
+            content: 'The Old Library es tu santuario digital para el conocimiento. Nuestra misión es preservar y compartir historias, ofreciendo un acceso fácil y abierto a una vasta colección de libros y documentos.'
+        }
+    ];
 
 const Home = () => {
     return (
-        <div>
-            <header className="header">
-                <nav className="header__nav">
-                    <ul className="header__nav-list">
-                        <li className="header__nav-item"><a href="#">Inicio</a></li>
-                        <li className="header__nav-item"><a href="#">Catálogo</a></li>
-                        <li className="header__nav-item"><a href="#">Servicios</a></li>
-                        <li className="header__nav-item"><a href="#">Eventos</a></li>
-                        <li className="header__nav-item">
-                            <Link to="/LoginRegister" className="header__link">
-                                <img className="header__icon" src="/images/avatar.png" alt="Login" />
-                                Login
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
+        // 1. El bloque .home se vuelve el contenedor principal
+        <div className="home"> 
+        
+        <Link to="/login" className="home__login-button">
+            <FaUserCircle className="home__login-icon" />
+            Iniciar Sesión
+        </Link>
 
-                <div className="header__contenedor">
-                    <h1 className="header__title">The Old Library</h1>
-                    <h3 className="header__subtitle">¡Bienvenido a The Old Library!</h3>
-                    <button
-                        className="header__button"
-                        onClick={() =>
-                            document.getElementById("coleccion")?.scrollIntoView({ behavior: "smooth" })
-                        }
-                    >
-                        Explorar
-                    </button>
-                </div>
-            </header>
+        {/* 2. Un "main" envuelve tu contenido central */}
+        <main className="home__main-wrapper">
+            <div className="home__content">
+            <div className="home__welcome-text">
+                <h1 className="home__title">Bienvenidos a The Old Library</h1>
+                <p className="home__subtitle">Tu portal digital a un mundo de conocimiento y descubrimiento.</p>
+            </div>
+            <div className="home__accordion-section">
+                {accordionItems.map((item, index) => (
+                <Accordion key={index} title={item.title}>
+                    {item.content}
+                </Accordion>
+                ))}
+            </div>
+            </div>
+        </main>
 
-            <section className="section section__about">
-                <div className="accordion">
-                    <Accordion title="Sobre Nosotros">
-                        <p>The Old Library es un espacio dedicado a preservar el conocimiento clásico y fomentar la lectura en todas las edades.</p>
-                    </Accordion>
-                </div>
-            </section>
+        {/* 3. El footer va al final, fuera del "main" */}
+        <footer className="home__footer">
+            <p className="home__footer-text">
+            © 2025 The Old Library. Todos los derechos reservados.
+            </p>
+        </footer>
 
-            <section id="coleccion" className="section section__collection">
-                <div className="accordion">
-                    <Accordion title="Nuestra Colección">
-                        <p>Literatura clásica, filosofía, historia, ciencia y cuentos infantiles. También tenemos una colección digital accesible.</p>
-                    </Accordion>
-                </div>
-            </section>
-
-            <section className="section section__testimonios">
-                <div className="accordion">
-                    <Accordion title="Lo que dicen nuestros visitantes">
-                        <blockquote>
-                            <p>“Un lugar mágico para los amantes de los libros.”</p>
-                            <cite>– Clara M.</cite>
-                        </blockquote>
-                        <blockquote>
-                            <p>“La colección digital me salvó durante mis estudios.”</p>
-                            <cite>– Andrés L.</cite>
-                        </blockquote>
-                    </Accordion>
-                </div>
-            </section>
-
-            <section className="section section__registro">
-                <div className="accordion">
-                    <Accordion title="¡Suscríbete al boletín!">
-                        <form className="formulario-registro">
-                            <input type="email" placeholder="Tu correo electrónico" required />
-                            <button type="submit">Suscribirme</button>
-                        </form>
-                    </Accordion>
-                </div>
-            </section>
-
-            <section className="section section__contact">
-                <div className="accordion">
-                    <Accordion title="Contáctanos">
-                        <p>¿Tienes preguntas o sugerencias? Estamos dispuestos a ayudarte a encontrar tu próximo descubrimiento literario.</p>
-                    </Accordion>
-                </div>
-            </section>
-
-            <footer className="footer">
-                <p className="footer__text">
-                    © 2025 The Old Library | <a href="#" className="footer__link">Política de privacidad</a>
-                </p>
-            </footer>
         </div>
     );
 };
 
-export default Home;
+    export default Home;
