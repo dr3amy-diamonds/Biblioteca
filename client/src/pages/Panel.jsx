@@ -20,10 +20,29 @@ const Panel = () => {
     // Estado para la lista de libros
     const [libros, setLibros] = useState([]);
     
-    // --- NUEVO: Estado para saber qué ID estamos editando ---
+    // Estado para saber qué ID estamos editando
     const [editingId, setEditingId] = useState(null);
 
-    // --- Función para LEER (READ) desde la API (Sin cambios) ---
+    // --- NUEVO: Estado para la paginación ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10; // Libros por página
+
+    // --- NUEVO: Hook para cambiar el fondo del BODY ---
+    useEffect(() => {
+        // Guardamos el color original (el oscuro de index.css)
+        const originalBodyColor = document.body.style.backgroundColor;
+        
+        // Aplicamos el color de fondo claro de este panel
+        document.body.style.backgroundColor = '#F0F2F5';
+
+        // Función de "limpieza": Se ejecuta cuando el componente se desmonta
+        return () => {
+            // Restauramos el color original
+            document.body.style.backgroundColor = originalBodyColor;
+        };
+    }, []); // El array vacío [] asegura que solo se ejecute al montar y desmontar
+
+    // --- Función para LEER (READ) desde la API ---
     const fetchLibros = async () => {
         try {
             const response = await fetch(`${API_URL}/api/libros`);
@@ -38,27 +57,26 @@ const Panel = () => {
         }
     };
 
-    // --- Cargar los libros cuando el componente inicia (Sin cambios) ---
+    // --- Cargar los libros cuando el componente inicia ---
     useEffect(() => {
         fetchLibros();
     }, []);
     
-    // --- NUEVO: Función para limpiar el formulario ---
+    // --- Función para limpiar el formulario ---
     const resetForm = () => {
         setFormData(estadoInicialForm);
         setPortada(null);
         setArchivoLibro(null);
         setEditingId(null);
+        setCurrentPage(1); // Opcional: volver a la página 1 al cancelar
         
-        // Limpiar visualmente los inputs de archivo
-        // Usamos try/catch por si los elementos no están renderizados
         try {
             document.querySelector("#portada").value = null;
             document.querySelector("#archivoLibro").value = null;
         } catch (e) {}
     };
 
-    // --- Handlers para el Formulario (sin cambios) ---
+    // --- Handlers para el Formulario ---
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prevData => ({ ...prevData, [name]: type === "checkbox" ? checked : value }));
@@ -67,34 +85,26 @@ const Panel = () => {
     const handleArchivoChange = (e) => { setArchivoLibro(e.target.files[0]); };
     
     
-    // --- Función handleSubmit (AHORA MANEJA CREATE Y UPDATE) ---
+    // --- Función handleSubmit (CREATE Y UPDATE) ---
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // 1. Usamos FormData para enviar archivos
         const dataParaApi = new FormData();
         for (const key in formData) {
             dataParaApi.append(key, formData[key]);
         }
-        if (portada) {
-            dataParaApi.append("portada", portada);
-        }
-        if (archivoLibro) {
-            dataParaApi.append("archivoLibro", archivoLibro);
-        }
+        if (portada) dataParaApi.append("portada", portada);
+        if (archivoLibro) dataParaApi.append("archivoLibro", archivoLibro);
 
         try {
             let response;
-            
-            // 2. Decidir si es UPDATE (PUT) o CREATE (POST)
             if (editingId) {
-                // --- Lógica de UPDATE (PUT) ---
+                // UPDATE (PUT)
                 response = await fetch(`${API_URL}/api/libros/${editingId}`, {
                     method: "PUT",
                     body: dataParaApi,
                 });
             } else {
-                // --- Lógica de CREATE (POST) ---
+                // CREATE (POST)
                 response = await fetch(`${API_URL}/api/libros`, {
                     method: "POST",
                     body: dataParaApi,
@@ -102,11 +112,10 @@ const Panel = () => {
             }
 
             const result = await response.json();
-
             if (result.success) {
                 alert(`¡Libro ${editingId ? 'actualizado' : 'guardado'} exitosamente!`);
-                resetForm();   // Limpiar formulario y salir del modo edición
-                fetchLibros(); // Recargar la tabla
+                resetForm();
+                fetchLibros();
             } else {
                 alert(`Error: ${result.message}`);
             }
@@ -116,7 +125,7 @@ const Panel = () => {
         }
     };
     
-    // --- Función para BORRAR (DELETE) (Sin cambios) ---
+    // --- Función para BORRAR (DELETE) ---
     const handleEliminar = async (libro) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar "${libro.titulo}"?`)) {
             try {
@@ -124,10 +133,9 @@ const Panel = () => {
                     method: 'DELETE'
                 });
                 const result = await response.json();
-
                 if (result.success) {
                     alert(result.message);
-                    fetchLibros(); // Recargar la tabla
+                    fetchLibros();
                 } else {
                      alert(`Error al eliminar: ${result.message}`);
                 }
@@ -138,26 +146,19 @@ const Panel = () => {
         }
     };
     
-    // --- NUEVO: Función para EDITAR (Carga datos en el form) ---
+    // --- Función para EDITAR (Carga datos en el form) ---
     const handleEditar = async (libro) => {
-        console.log("Cargando datos para editar:", libro.id);
         try {
-            // 1. Llamar a la API para obtener TODOS los datos de este libro
             const response = await fetch(`${API_URL}/api/libros/${libro.id}`);
             const result = await response.json();
             
             if (result.success) {
-                // 2. Rellenar el formulario con los datos recibidos
                 setFormData(result.data);
-                // 3. Marcar el ID que estamos editando
                 setEditingId(libro.id);
-                // 4. Limpiar los campos de archivo (el usuario debe subirlos de nuevo si quiere cambiarlos)
                 setPortada(null);
                 setArchivoLibro(null);
                 document.querySelector("#portada").value = null;
                 document.querySelector("#archivoLibro").value = null;
-                
-                // Opcional: Mover la vista al formulario
                 window.scrollTo(0, 0); 
             } else {
                 alert(`Error al cargar datos: ${result.message}`);
@@ -166,6 +167,19 @@ const Panel = () => {
              console.error("Error de red al cargar libro:", err);
              alert("Error de conexión al cargar datos para editar.");
         }
+    };
+
+    // --- NUEVO: Lógica de Paginación (Cálculos) ---
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    // "Rebanamos" la lista de libros
+    const currentLibros = libros.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(libros.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageNumber > totalPages) pageNumber = totalPages;
+        setCurrentPage(pageNumber);
     };
 
     return (
@@ -180,14 +194,12 @@ const Panel = () => {
 
                 {/* --- COLUMNA IZQUIERDA: TARJETA DE FORMULARIO --- */}
                 <div className={styles.formCard}>
-                    {/* Título dinámico */}
                     <h2>{editingId ? "Editando Libro" : "Registrar Nuevo Item"}</h2>
                     
                     <form className={styles.libroForm} onSubmit={handleSubmit}>
                         
-                        {/* Columna 1 del Formulario (Inputs sin cambios) */}
+                        {/* Columna 1 del Formulario */}
                         <div className={styles.formColumna}>
-                            {/* ... (todos los .formGroup de título, autor, desc, isbn, editorial) ... */}
                             <div className={styles.formGroup}>
                                 <label htmlFor="titulo">Título del Libro:</label>
                                 <input type="text" id="titulo" name="titulo" value={formData.titulo} onChange={handleChange} required />
@@ -210,9 +222,8 @@ const Panel = () => {
                             </div>
                         </div>
 
-                        {/* Columna 2 del Formulario (Inputs sin cambios) */}
+                        {/* Columna 2 del Formulario */}
                         <div className={styles.formColumna}>
-                            {/* ... (todos los .formGroup de año, pág, género, etc.) ... */}
                             <div className={styles.formGroupInline}>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="ano_publicacion">Año Pub:</label>
@@ -261,7 +272,6 @@ const Panel = () => {
 
                         {/* Botones dinámicos */}
                         <div className={styles.formActions}>
-                            {/* Mostramos "Cancelar" solo si estamos editando */}
                             {editingId && (
                                 <button type="button" className={styles.btnCancelar} onClick={resetForm}>
                                     Cancelar
@@ -284,7 +294,6 @@ const Panel = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                {/* NUEVA COLUMNA */}
                                 <th>Portada</th> 
                                 <th>Título</th>
                                 <th>Autor</th>
@@ -293,10 +302,10 @@ const Panel = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {libros.map(libro => (
+                            {/* CAMBIO: Mapeamos sobre 'currentLibros' en lugar de 'libros' */}
+                            {currentLibros.map(libro => (
                                 <tr key={libro.id}>
                                     <td>{libro.id}</td>
-                                    {/* NUEVO TD CON LA IMAGEN */}
                                     <td>
                                         <img 
                                             src={`${API_URL}/api/libros/portada/${libro.id}`} 
@@ -329,6 +338,36 @@ const Panel = () => {
                     </table>
                     
                     {libros.length === 0 && <p>Cargando libros o no hay libros para mostrar.</p>}
+
+                    {/* --- NUEVO: Controles de Paginación --- */}
+                    {libros.length > itemsPerPage && (
+                        <div className={styles.paginationControls}>
+                            <button 
+                                onClick={() => handlePageChange(currentPage - 1)} 
+                                disabled={currentPage === 1}
+                            >
+                                Anterior
+                            </button>
+                            
+                            {/* Generar botones de número de página */}
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <button
+                                    key={index + 1}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={currentPage === (index + 1) ? styles.activePage : ''}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                            
+                            <button 
+                                onClick={() => handlePageChange(currentPage + 1)} 
+                                disabled={currentPage === totalPages}
+                            >
+                                Siguiente
+                            </button>
+                        </div>
+                    )}
                 </div>
 
             </div>

@@ -4,13 +4,13 @@
 
 /* Variables de color globales (movidas desde Menu.css) */
 :root {
-  --primary-color: #5c4b3e;
-  --secondary-color: #f2ebd5;
-  --accent-color: #8b7355;
-  --text-color: #333;
-  --light-text: #fff;
-  --book-card-bg: #f8f5e9;
-  --pagination-active: #5c4b3e;
+    --primary-color: #5c4b3e;
+    --secondary-color: #f2ebd5;
+    --accent-color: #8b7355;
+    --text-color: #333;
+    --light-text: #fff;
+    --book-card-bg: #f8f5e9;
+    --pagination-active: #5c4b3e;
 }
 
 /* Reset básico */
@@ -26,7 +26,7 @@ html, body {
     margin: 0;
     padding: 0;
     /* Este es tu fondo global verde oscuro */
-    background-color: #101e1a; 
+    /* background-color: #101e1a; */
     color: var(--text-color);
 }
 
