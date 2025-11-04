@@ -217,6 +217,9 @@ h1 {
   font-family: inherit;
   cursor: pointer;
   text-align: left;
+  /* Evita el letterboxing por line-height de los botones inline */
+  display: flex;
+  flex-direction: column;
 }
 
 .book-card:hover {
@@ -227,6 +230,7 @@ h1 {
   width: 100%;
   height: 250px;
   object-fit: cover;
+  display: block; /* Quita alineación de línea y espacios fantasma */
 }
 
 .book-info {
