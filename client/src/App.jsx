@@ -4,6 +4,7 @@ import LoginRegistro from "./pages/LoginRegister";
 import MainLibrary from "./pages/MainLibrary";
 import Menu from "./pages/Menu";
 import Panel from "./pages/Panel";
+import AvisoLegal from "./pages/AvisoLegal";
 
 function App() {
   return (
@@ -21,6 +22,11 @@ function App() {
         <Route path="/recomendados" element={<MainLibrary />} />
         <Route path="/page/:pageNumber" element={<MainLibrary />} />
         <Route path="/panel" element={<Panel />} />
+        {/* Rutas legales */}
+        <Route path="/legal" element={<AvisoLegal />} />
+        <Route path="/privacidad" element={<AvisoLegal />} />
+        <Route path="/terminos" element={<AvisoLegal />} />
+        <Route path="/politicas" element={<AvisoLegal />} />
       </Routes>
     </Router>
   );

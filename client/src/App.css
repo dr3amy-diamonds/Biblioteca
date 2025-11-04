@@ -1,9 +1,4 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+/* Eliminado el estilo global de #root que forzaba la caja centrada */
 
 .logo {
   height: 6em;

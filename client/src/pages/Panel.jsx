@@ -23,11 +23,11 @@ const Panel = () => {
     // Estado para saber qué ID estamos editando
     const [editingId, setEditingId] = useState(null);
 
-    // --- NUEVO: Estado para la paginación ---
+    // --- Estado para la paginación ---
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Libros por página
 
-    // --- NUEVO: Hook para cambiar el fondo del BODY ---
+    // --- Hook para cambiar el fondo del BODY ---
     useEffect(() => {
         // Guardamos el color original (el oscuro de index.css)
         const originalBodyColor = document.body.style.backgroundColor;
@@ -68,7 +68,7 @@ const Panel = () => {
         setPortada(null);
         setArchivoLibro(null);
         setEditingId(null);
-        setCurrentPage(1); // Opcional: volver a la página 1 al cancelar
+        setCurrentPage(1);
         
         try {
             document.querySelector("#portada").value = null;
@@ -149,16 +149,22 @@ const Panel = () => {
     // --- Función para EDITAR (Carga datos en el form) ---
     const handleEditar = async (libro) => {
         try {
+            // Hacemos un fetch de los datos completos del libro
             const response = await fetch(`${API_URL}/api/libros/${libro.id}`);
             const result = await response.json();
             
             if (result.success) {
+                // Rellenamos el formulario con los datos recibidos
                 setFormData(result.data);
                 setEditingId(libro.id);
+                
+                // Limpiamos los campos de archivo
                 setPortada(null);
                 setArchivoLibro(null);
                 document.querySelector("#portada").value = null;
                 document.querySelector("#archivoLibro").value = null;
+                
+                // Hacemos scroll al inicio de la página para ver el formulario
                 window.scrollTo(0, 0); 
             } else {
                 alert(`Error al cargar datos: ${result.message}`);
@@ -169,10 +175,9 @@ const Panel = () => {
         }
     };
 
-    // --- NUEVO: Lógica de Paginación (Cálculos) ---
+    // --- Lógica de Paginación (Cálculos) ---
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    // "Rebanamos" la lista de libros
     const currentLibros = libros.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(libros.length / itemsPerPage);
 
@@ -227,7 +232,16 @@ const Panel = () => {
                             <div className={styles.formGroupInline}>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="ano_publicacion">Año Pub:</label>
-                                    <input type="number" id="ano_publicacion" name="ano_publicacion" placeholder="Ej: 2024" value={formData.ano_publicacion} onChange={handleChange} />
+                                    
+                                    {/* --- CAMBIO AQUÍ --- */}
+                                    <input 
+                                        type="text"  /* Cambiado de "number" a "text" */
+                                        id="ano_publicacion" 
+                                        name="ano_publicacion" 
+                                        placeholder="Ej: 2024, MMXV, o V AC" /* Placeholder actualizado */
+                                        value={formData.ano_publicacion} 
+                                        onChange={handleChange} 
+                                    />
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="numero_paginas">Nº Páginas:</label>
@@ -302,7 +316,7 @@ const Panel = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* CAMBIO: Mapeamos sobre 'currentLibros' en lugar de 'libros' */}
+                            {/* Mapeamos sobre 'currentLibros' */}
                             {currentLibros.map(libro => (
                                 <tr key={libro.id}>
                                     <td>{libro.id}</td>
@@ -339,7 +353,7 @@ const Panel = () => {
                     
                     {libros.length === 0 && <p>Cargando libros o no hay libros para mostrar.</p>}
 
-                    {/* --- NUEVO: Controles de Paginación --- */}
+                    {/* --- Controles de Paginación --- */}
                     {libros.length > itemsPerPage && (
                         <div className={styles.paginationControls}>
                             <button 

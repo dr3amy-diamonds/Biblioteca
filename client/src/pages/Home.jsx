@@ -1,9 +1,10 @@
+//Home.jsx
 
-    import React from 'react';
-    import { Link } from 'react-router-dom';
-    import { FaUserCircle } from 'react-icons/fa';
-    import Accordion from '../components/Accordion'; 
-    import '../styles/Home.css'; // Sigue importando sus estilos
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
+import Accordion from '../components/Accordion'; 
+import '../styles/Home.css'; // Sigue importando sus estilos
 
     // (El contenido de accordionItems no cambia)
     const accordionItems = [
@@ -35,7 +36,7 @@ const Home = () => {
         <main className="home__main-wrapper">
             <div className="home__content">
             <div className="home__welcome-text">
-                <h1 className="home__title">Bienvenidos a The Old Library</h1>
+                <h1 className="home__title">Bienvenidos a <br />The Old Library</h1>
                 <p className="home__subtitle">Tu portal digital a un mundo de conocimiento y descubrimiento.</p>
             </div>
             <div className="home__accordion-section">
@@ -51,7 +52,7 @@ const Home = () => {
         {/* 3. El footer va al final, fuera del "main" */}
         <footer className="home__footer">
             <p className="home__footer-text">
-            © 2025 The Old Library. Todos los derechos reservados.
+            © 2025 The Old Library. Todos los derechos reservados. <a href="/legal" className="home__footer-link">Aviso Legal</a>
             </p>
         </footer>
 

@@ -117,5 +117,16 @@
     .home__accordion-section {
     width: 100%;
     }
+
+    .home__footer-link {
+    color: #f4efea;
+    text-decoration: underline;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    }
+
+    .home__footer-link:hover {
+    color: #d2b48c;
+    }
 /* --- ESTILOS DEL FOOTER --- */
 /* (Añade esto al final de Home.css) */

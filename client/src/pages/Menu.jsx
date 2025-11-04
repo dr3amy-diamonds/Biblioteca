@@ -1,18 +1,33 @@
-// Menu.jsx (Corregido)
+// Menu.jsx (Completo, con paginación Y CORRECCIÓN DE LAYOUT DEFINITIVA)
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// 1. IMPORTAMOS EL MÓDULO (styles)
-import styles from "../styles/Menu.module.css"; 
-import LibroDetalle from "./LibroDetalle"; 
+import styles from "../styles/Menu.module.css";
+import LibroDetalle from "./LibroDetalle"; // Asegúrate de que este componente exista
 
 const API_URL = "http://localhost:3001";
-const MAX_LIBROS_POR_PAGINA = 15; 
+const MAX_LIBROS_POR_PAGINA = 15;
 
 const Menu = () => {
-  // ... (toda tu lógica de 'useState', 'useEffect', 'handleBookClick' no cambia) ...
   const [libros, setLibros] = useState([]);
-  const [selectedLibro, setSelectedLibro] = useState(null); 
+  const [selectedLibro, setSelectedLibro] = useState(null);
   const [isLoadingDetalle, setIsLoadingDetalle] = useState(false);
+  const [paginaActual, setPaginaActual] = useState(1);
+  
+
+
+  // --- LÓGICA DE PAGINACIÓN ---
+  const totalPaginas = Math.ceil(libros.length / MAX_LIBROS_POR_PAGINA);
+  const indiceFinal = paginaActual * MAX_LIBROS_POR_PAGINA;
+  const indiceInicial = indiceFinal - MAX_LIBROS_POR_PAGINA;
+  const librosActuales = libros.slice(indiceInicial, indiceFinal);
+
+  const handlePageChange = (nuevaPagina) => {
+    if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
+    setPaginaActual(nuevaPagina);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+  };
+  // --- FIN DE LA LÓGICA DE PAGINACIÓN ---
+
 
   useEffect(() => {
     const fetchLibros = async () => {
@@ -20,7 +35,7 @@ const Menu = () => {
         const response = await fetch(`${API_URL}/api/libros`);
         const result = await response.json();
         if (result.success) {
-          setLibros(result.data); 
+          setLibros(result.data);
         } else {
           console.error("Error al cargar libros:", result.message);
         }
@@ -29,7 +44,7 @@ const Menu = () => {
       }
     };
     fetchLibros();
-  }, []); 
+  }, []);
 
   const handleBookClick = async (libroId) => {
     setIsLoadingDetalle(true); 
@@ -54,13 +69,12 @@ const Menu = () => {
 
   return (
     <>
-      {/* 2. CORRECCIÓN: Usamos styles['clase-con-guion'] */}
       <div className={styles['menu-container']}>
         
         <header className={styles['menu-header']}>
+          {/* ... (tu header no cambia) ... */}
           <div className={styles['header-top-row']}>
             <div className={styles['logo-container']}>
-              {/* 'logo' no tiene guion, así que styles.logo está bien */}
               <img src="/images/logo.png" alt="The Old Library Logo" className={styles.logo} />
               <h1>The Old Library</h1>
             </div>
@@ -81,26 +95,19 @@ const Menu = () => {
           </nav>
         </header>
         
-        {libros.length > MAX_LIBROS_POR_PAGINA && (
-          // 'pagination' no tiene guion
-          <div className={styles.pagination}>
-            {/* ... */}
-          </div>
-        )}
-        
         <section className={styles['books-section']}>
           <h2>Bienvenidos</h2>
           <div className={styles['books-grid']}>
-            {libros.map(libro => (
-              <button 
-                key={libro.id} 
+            {librosActuales.map(libro => (
+              <button
+                key={libro.id}
                 className={styles['book-card']}
                 onClick={() => handleBookClick(libro.id)}
               >
-                <img 
-                  src={`${API_URL}/api/libros/portada/${libro.id}`} 
-                  alt={libro.titulo} 
-                  className={styles['book-image']} 
+                <img
+                  src={`${API_URL}/api/libros/portada/${libro.id}`}
+                  alt={libro.titulo}
+                  className={styles['book-image']}
                 />
                 <div className={styles['book-info']}>
                   <h3 className={styles['book-title']}>{libro.titulo}</h3>
@@ -111,15 +118,53 @@ const Menu = () => {
           </div>
           {libros.length === 0 && <p>Cargando libros o no hay ninguno disponible...</p>}
         </section>
+
+
+        {/* --- CONTROLES DE PAGINACIÓN (GENERADOS) --- */}
+        {libros.length > MAX_LIBROS_POR_PAGINA && (
+          <div className={styles.pagination}>
+            <button
+              className={styles.pageLink}
+              onClick={() => handlePageChange(paginaActual - 1)}
+              disabled={paginaActual === 1}
+            >
+              &laquo; Anterior
+            </button>
+            
+            {Array.from({ length: totalPaginas }, (_, index) => (
+              <button
+                key={index + 1}
+                className={`${styles.pageLink} ${paginaActual === index + 1 ? styles.active : ''}`}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+
+            <button
+              className={styles.pageLink}
+              onClick={() => handlePageChange(paginaActual + 1)}
+              disabled={paginaActual === totalPaginas}
+            >
+              Siguiente &raquo;
+            </button>
+          </div>
+        )}
         
-        {/* 'footer' no tiene guion */}
         <footer className={styles.footer}>
-          {/* ... (asegúrate de que las clases del footer también usen 'styles.') ... */}
+          {/* ... (tu footer no cambia) ... */}
+          <div className={styles['footer-content']}>
+            <p>&copy; 2025 The Old Library. Todos los derechos reservados.</p>
+            <div className={styles['footer-links']}>
+                <Link to="/privacidad" className={styles['footer-link']}>Privacidad</Link>
+                <Link to="/terminos" className={styles['footer-link']}>Términos</Link>
+            </div>
+          </div>
         </footer>
         
-      </div> 
+      </div>
 
-      {/* Los overlays están fuera y usan corchetes */}
+      {/* Overlays */}
       {isLoadingDetalle && (
         <div className={styles['loading-overlay']}>
           <p>Cargando detalles...</p>
@@ -134,7 +179,7 @@ const Menu = () => {
         />
       )}
       
-    </> 
+    </>
   );
 };
 
