@@ -5,6 +5,8 @@ import MainLibrary from "./pages/MainLibrary";
 import Menu from "./pages/Menu";
 import Panel from "./pages/Panel";
 import AvisoLegal from "./pages/AvisoLegal";
+import Favoritos from "./pages/Favoritos";
+import Evento from "./pages/Evento";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/recomendados" element={<MainLibrary />} />
         <Route path="/page/:pageNumber" element={<MainLibrary />} />
         <Route path="/panel" element={<Panel />} />
+        <Route path="/favoritos" element={<Favoritos />} />
+        <Route path="/eventos" element={<Evento />} />
         {/* Rutas legales */}
         <Route path="/legal" element={<AvisoLegal />} />
         <Route path="/privacidad" element={<AvisoLegal />} />

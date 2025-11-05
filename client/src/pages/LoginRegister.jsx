@@ -48,6 +48,11 @@ const LoginRegistro = () => {
             });
 
             if (response.data.success) {
+                try {
+                    localStorage.setItem("currentUserEmail", String(emailLogin).trim().toLowerCase());
+                } catch (e) {
+                    console.warn("No se pudo guardar el usuario actual en localStorage", e);
+                }
                 navigate("/MainLibrary");
             } else {
                 alert("Credenciales incorrectas");
@@ -171,7 +176,7 @@ const LoginRegistro = () => {
             <footer className="login-footer">
                 <p className="login-footer__text">
                     © 2025 The Old Library |{" "}
-                    <a href="#" className="login-footer__link">
+                    <a href="/legal" className="login-footer__link">
                         Política de privacidad
                     </a>
                 </p>

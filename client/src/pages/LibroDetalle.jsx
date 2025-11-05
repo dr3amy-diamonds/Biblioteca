@@ -1,9 +1,10 @@
 // src/components/LibroDetalle.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // 1. ¡IMPORTANTE! Importamos el módulo de estilos de Menu
 // (Aquí es donde están guardadas las clases .modalOverlay, .modalContent, etc.)
 import styles from '../styles/Menu.module.css'; 
+import { isFavorite, toggleFavorite } from '../utils/favorites';
 
 // --- Iconos SVG Simples ---
 const IconDownload = () => (
@@ -21,9 +22,23 @@ const IconClose = () => (
 
 const LibroDetalle = ({ libro, onClose, apiUrl }) => {
 
+    const [isFav, setIsFav] = useState(false);
+
     const handleContentClick = (e) => e.stopPropagation();
 
+    useEffect(() => {
+        if (libro) {
+            setIsFav(isFavorite(libro.id));
+        }
+    }, [libro]);
+
     if (!libro) return null;
+
+    const handleToggleFavorite = () => {
+        const updated = toggleFavorite(libro);
+        const nowFav = updated.some((b) => String(b.id) === String(libro.id));
+        setIsFav(nowFav);
+    };
 
     // 2. CAMBIAMOS "clase" por {styles.clase}
     // (Usamos brackets [] para las clases con guiones)
@@ -81,6 +96,16 @@ const LibroDetalle = ({ libro, onClose, apiUrl }) => {
                 >
                     Descargar (PDF) <IconDownload />
                 </a>
+                <button
+                    type="button"
+                    className={styles.btnDescargar}
+                    onClick={handleToggleFavorite}
+                    aria-pressed={isFav}
+                    title={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
+                >
+                    <i className={isFav ? "fas fa-heart" : "far fa-heart"} style={{ color: isFav ? 'red' : 'inherit' }}></i>
+                    {isFav ? " En favoritos" : " Guardar favorito"}
+                </button>
                 </div>
             </div>
             </div>

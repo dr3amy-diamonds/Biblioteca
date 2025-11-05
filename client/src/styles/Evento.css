@@ -1,0 +1,218 @@
+/* src/styles/Evento.css */
+/* Estilos BEM consistentes con el proyecto y variables del tema */
+
+.evento {
+  width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  /* MEJORA: Añadido min-height para asegurar que la sección tenga espacio */
+}
+
+.evento__list {
+  width: 100%;
+  /* MEJORA: Ampliado el max-width para que quepan mejor las tarjetas en la cuadrícula */
+  max-width: 1200px; 
+  
+  /* CAMBIO PRINCIPAL: De Flex Column a Grid */
+  display: grid;
+  /* 'auto-fit': Crea tantas columnas como quepan.
+    'minmax(380px, 1fr)': Cada columna tendrá un mínimo de 380px 
+                         y crecerá para ocupar el espacio (1fr).
+    Esto es el corazón del rediseño responsivo.
+  */
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 2rem;
+}
+
+.evento__container {
+  width: 100%;
+  max-width: 1100px; /* Esta línea ahora es redundante por el grid, pero no hace daño */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  /* MEJORA UX: Añadido para alinear contenido (ver .evento__content) */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que todas las tarjetas en una fila tengan el mismo alto */
+
+  /* MEJORA UI: Transición suave para el hover */
+  transition: all 0.3s ease-in-out;
+}
+
+/* MEJORA UI: Efecto hover sutil en toda la tarjeta */
+.evento__container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.evento__header {
+  background: var(--primary-color);
+  color: var(--light-text);
+  padding: 1.75rem 2rem;
+}
+
+.evento__title {
+  font-size: 2.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.evento__datetime {
+  display: flex;
+  gap: 1rem;
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+.evento__date,
+.evento__time {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+}
+
+.evento__content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+
+  /* MEJORA UX: Esta sección crecerá para empujar los botones 
+     hacia abajo, alineándolos en la parte inferior de la tarjeta. */
+  flex-grow: 1; 
+}
+
+.evento__image-wrapper {
+  background: var(--book-card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+}
+
+.evento__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.evento__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.evento__description {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.evento__location {
+  font-size: 0.98rem;
+}
+
+.evento__location-label {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.evento__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  /* MEJORA UI: Los botones ahora están pegados al padding inferior del content,
+     pero como el content crece, se alinearán al fondo de la card. */
+  padding: 0 2rem 2rem 2rem; /* Añadido padding para separarlos del borde */
+}
+
+.evento__btn {
+  cursor: pointer;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.evento__btn--primary {
+  background: var(--primary-color);
+  color: var(--light-text);
+}
+
+.evento__btn--secondary {
+  background: var(--book-card-bg);
+  color: var(--text-color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* El hover del botón original se mantiene, pero ahora se suma al hover de la tarjeta */
+.evento__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Estado activo (aplicado a ambos botones cuando están activos) */
+.evento__btn--active {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  /* El grid principal de .evento__list se encargará de 
+    gran parte del responsive. 
+    Este media query ahora solo ajusta el interior de la tarjeta
+    cuando sea necesario.
+  */
+  .evento__content {
+    grid-template-columns: 1fr;
+  }
+
+  .evento__image-wrapper {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 560px) {
+  .evento {
+    padding: 1rem 0; /* Ajustado para que las tarjetas puedan tocar los bordes */
+  }
+
+  /* MEJORA: El grid ya se encarga de esto, pero podemos
+     forzar una sola columna si es necesario. */
+  .evento__list {
+    grid-template-columns: 1fr; /* Una sola columna en móviles */
+    padding: 0 1rem; /* Espacio a los lados en móvil */
+  }
+
+  .evento__header {
+    padding: 1.25rem 1rem;
+  }
+
+  .evento__title {
+    font-size: 1.8rem;
+  }
+
+  .evento__datetime {
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .evento__content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .evento__actions {
+    flex-direction: column;
+    padding: 0 1rem 1rem 1rem; /* Ajuste de padding para móvil */
+  }
+}
