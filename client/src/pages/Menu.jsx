@@ -13,13 +13,18 @@ const Menu = () => {
   const [isLoadingDetalle, setIsLoadingDetalle] = useState(false);
   const [paginaActual, setPaginaActual] = useState(1);
   
-
+  // --- NUEVOS ESTADOS PARA LA BÚSQUEDA ---
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  
 
   // --- LÓGICA DE PAGINACIÓN ---
-  const totalPaginas = Math.ceil(libros.length / MAX_LIBROS_POR_PAGINA);
+  const librosMostrar = isSearching ? searchResults : libros;
+  const totalPaginas = Math.ceil(librosMostrar.length / MAX_LIBROS_POR_PAGINA);
   const indiceFinal = paginaActual * MAX_LIBROS_POR_PAGINA;
   const indiceInicial = indiceFinal - MAX_LIBROS_POR_PAGINA;
-  const librosActuales = libros.slice(indiceInicial, indiceFinal);
+  const librosActuales = librosMostrar.slice(indiceInicial, indiceFinal);
 
   const handlePageChange = (nuevaPagina) => {
     if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
@@ -67,6 +72,44 @@ const Menu = () => {
     setSelectedLibro(null);
   };
 
+  // --- NUEVA LÓGICA DE BÚSQUEDA CON DEBOUNCE ---
+  useEffect(() => {
+    // Si no hay término de búsqueda, resetear
+    if (!searchTerm.trim()) {
+      setIsSearching(false);
+      setSearchResults([]);
+      setPaginaActual(1);
+      return;
+    }
+
+    // Debounce: esperar 300ms después del último cambio
+    const timeoutId = setTimeout(() => {
+      const termLower = searchTerm.toLowerCase().trim();
+      
+      const resultados = libros.filter((libro) => {
+        // Búsqueda insensible a mayúsculas/minúsculas
+        const tituloMatch = libro.titulo.toLowerCase().includes(termLower);
+        const autorMatch = libro.autor.toLowerCase().includes(termLower);
+        
+        return tituloMatch || autorMatch;
+      });
+
+      setSearchResults(resultados);
+      setIsSearching(true);
+      setPaginaActual(1); // Resetear a la primera página al buscar
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, libros]);
+
+  // Función para limpiar la búsqueda
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setIsSearching(false);
+    setSearchResults([]);
+    setPaginaActual(1);
+  };
+
   return (
     <>
       <div className={styles['menu-container']}>
@@ -79,7 +122,14 @@ const Menu = () => {
               <h1>The Old Library</h1>
             </div>
             <div className={styles['search-container']}>
-              <input type="text" placeholder="Buscar un libro..." className={styles['search-input']} />
+              <input 
+                type="text" 
+                placeholder="Buscar un libro..." 
+                className={styles['search-input']}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                aria-label="Buscar libros por título o autor"
+              />
               <button className={styles['search-button']}>
                 <i className="search-icon">🔍</i>
               </button>
@@ -97,31 +147,64 @@ const Menu = () => {
         
         <section className={styles['books-section']}>
           <h2>Bienvenidos</h2>
-          <div className={styles['books-grid']}>
-            {librosActuales.map(libro => (
-              <button
-                key={libro.id}
-                className={styles['book-card']}
-                onClick={() => handleBookClick(libro.id)}
-              >
-                <img
-                  src={`${API_URL}/api/libros/portada/${libro.id}`}
-                  alt={libro.titulo}
-                  className={styles['book-image']}
-                />
-                <div className={styles['book-info']}>
-                  <h3 className={styles['book-title']}>{libro.titulo}</h3>
-                  <p className={styles['book-author']}>{libro.autor}</p>
-                </div>
+          
+          {/* Información de búsqueda */}
+          {isSearching && (
+            <div className={styles['search-info']}>
+              <p>
+                Resultados para: <strong>"{searchTerm}"</strong>
+              </p>
+              <p>
+                {searchResults.length} {searchResults.length === 1 ? 'libro encontrado' : 'libros encontrados'}
+              </p>
+              <button onClick={handleClearSearch} className={styles['clear-search']}>
+                ✕ Limpiar búsqueda
               </button>
-            ))}
-          </div>
-          {libros.length === 0 && <p>Cargando libros o no hay ninguno disponible...</p>}
+            </div>
+          )}
+
+          {/* Grid de libros o mensaje de sin resultados */}
+          {librosActuales.length === 0 && isSearching ? (
+            <div className={styles['no-results']}>
+              <div className={styles['no-results-content']}>
+                <span className={styles['no-results-icon']}>📚</span>
+                <h3>No hay resultados</h3>
+                <p>El libro que has buscado no está en nuestra colección</p>
+                <button onClick={handleClearSearch} className={styles['clear-search']}>
+                  Volver a explorar
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className={styles['books-grid']}>
+              {librosActuales.map(libro => (
+                <button
+                  key={libro.id}
+                  className={styles['book-card']}
+                  onClick={() => handleBookClick(libro.id)}
+                >
+                  <img
+                    src={`${API_URL}/api/libros/portada/${libro.id}`}
+                    alt={libro.titulo}
+                    className={styles['book-image']}
+                  />
+                  <div className={styles['book-info']}>
+                    <h3 className={styles['book-title']}>{libro.titulo}</h3>
+                    <p className={styles['book-author']}>{libro.autor}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {libros.length === 0 && !isSearching && (
+            <p className={styles['loading-message']}>Cargando libros o no hay ninguno disponible...</p>
+          )}
         </section>
 
 
         {/* --- CONTROLES DE PAGINACIÓN (GENERADOS) --- */}
-        {libros.length > MAX_LIBROS_POR_PAGINA && (
+        {librosMostrar.length > MAX_LIBROS_POR_PAGINA && (
           <div className={styles.pagination}>
             <button
               className={styles.pageLink}

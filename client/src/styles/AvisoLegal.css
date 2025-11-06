@@ -87,7 +87,7 @@
 
 .legal-link {
   color: var(--primary-color);
-  text-decoration: underline;
+  text-decoration: solid;
 }
 
 .legal-link:hover {

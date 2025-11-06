@@ -208,6 +208,70 @@ router.delete("/api/libros/:id", (req, res) => {
 
 
 // =========================================
+// RUTAS DE CATEGORÍAS
+// =========================================
+
+// --- GET todas las categorías únicas ---
+router.get("/api/categorias", (req, res) => {
+    const sql = `
+        SELECT DISTINCT genero as categoria
+        FROM libros 
+        WHERE genero IS NOT NULL AND genero != ''
+        ORDER BY genero ASC
+    `;
+    
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.error("❌ Error al obtener categorías:", err.message);
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.json({ success: true, data: rows });
+    });
+});
+
+// --- GET libros por categoría ---
+router.get("/api/categorias/:nombre", (req, res) => {
+    const categoria = req.params.nombre;
+    const sql = `
+        SELECT id, titulo, autor, isbn, genero
+        FROM libros 
+        WHERE LOWER(genero) = LOWER(?)
+        ORDER BY titulo ASC
+    `;
+    
+    db.all(sql, [categoria], (err, rows) => {
+        if (err) {
+            console.error("❌ Error al obtener libros por categoría:", err.message);
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.json({ 
+            success: true, 
+            data: rows,
+            categoria: categoria 
+        });
+    });
+});
+
+// --- GET estadísticas de categorías (útil para mostrar contadores) ---
+router.get("/api/categorias/stats/count", (req, res) => {
+    const sql = `
+        SELECT genero as categoria, COUNT(*) as total
+        FROM libros 
+        WHERE genero IS NOT NULL AND genero != ''
+        GROUP BY genero
+        ORDER BY total DESC
+    `;
+    
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.error("❌ Error al obtener estadísticas:", err.message);
+            return res.status(500).json({ success: false, message: err.message });
+        }
+        res.json({ success: true, data: rows });
+    });
+});
+
+// =========================================
 // RUTAS DE USUARIOS (Sin cambios)
 // =========================================
 router.post("/register", async (req, res) => {

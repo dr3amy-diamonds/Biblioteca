@@ -7,6 +7,7 @@ import Panel from "./pages/Panel";
 import AvisoLegal from "./pages/AvisoLegal";
 import Favoritos from "./pages/Favoritos";
 import Evento from "./pages/Evento";
+import Categoria from "./pages/Categoria";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
         <Route path="/LoginRegister" element={<LoginRegistro />} />
         <Route path="/MainLibrary" element={<MainLibrary />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/categorias" element={<MainLibrary />} />
+        <Route path="/categorias" element={<Categoria />} />
+        <Route path="/categoria/:nombre" element={<Categoria />} />
         <Route path="/libros" element={<MainLibrary />} />
         <Route path="/autores" element={<MainLibrary />} />
         <Route path="/categories" element={<MainLibrary />} />
