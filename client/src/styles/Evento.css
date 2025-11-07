@@ -6,22 +6,23 @@
   background-color: var(--secondary-color);
   color: var(--text-color);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  /* MEJORA: Añadido min-height para asegurar que la sección tenga espacio */
+  box-sizing: border-box;
 }
 
 .evento__list {
   width: 100%;
   /* MEJORA: Ampliado el max-width para que quepan mejor las tarjetas en la cuadrícula */
   max-width: 1200px; 
+  padding: 0 2rem 2rem 2rem;
+  flex: 1;
   
   /* CAMBIO PRINCIPAL: De Flex Column a Grid */
   display: grid;
   /* 'auto-fit': Crea tantas columnas como quepan.
     'minmax(380px, 1fr)': Cada columna tendrá un mínimo de 380px 
-                         y crecerá para ocupar el espacio (1fr).
+  y crecerá para ocupar el espacio (1fr).
     Esto es el corazón del rediseño responsivo.
   */
   grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -166,6 +167,79 @@
 }
 
 /* Responsive */
+/* Header bar con botón de retorno */
+.evento__header-bar {
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.evento__back-button {
+  background: var(--primary-color, #2c5f4f);
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.evento__back-button:hover {
+  background: var(--primary-hover, #1a3d32);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer con el nuevo estilo - nomenclatura BEM específica para evento */
+.evento__footer {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 2rem;
+  margin-top: auto; 
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.evento__footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.evento__footer-text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.evento__footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.evento__footer-link {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.evento__footer-link:hover {
+  text-decoration: underline;
+  color: var(--light-text);
+}
+
+/* Responsive */
 @media (max-width: 900px) {
   /* El grid principal de .evento__list se encargará de 
     gran parte del responsive. 
@@ -177,20 +251,14 @@
   }
 
   .evento__image-wrapper {
-    min-height: 220px;
+    min-height: 180px;
   }
 }
 
 @media (max-width: 560px) {
-  .evento {
-    padding: 1rem 0; /* Ajustado para que las tarjetas puedan tocar los bordes */
-  }
-
-  /* MEJORA: El grid ya se encarga de esto, pero podemos
-     forzar una sola columna si es necesario. */
   .evento__list {
-    grid-template-columns: 1fr; /* Una sola columna en móviles */
-    padding: 0 1rem; /* Espacio a los lados en móvil */
+    grid-template-columns: 1fr;
+    padding: 0 1rem 1rem 1rem;
   }
 
   .evento__header {
@@ -213,6 +281,20 @@
   
   .evento__actions {
     flex-direction: column;
-    padding: 0 1rem 1rem 1rem; /* Ajuste de padding para móvil */
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .evento__footer {
+    padding: 1.5rem 1rem;
+  }
+
+  .evento__footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .evento__footer-links {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 }

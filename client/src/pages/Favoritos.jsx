@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import '../styles/Favoritos.css';
 import { loadFavorites, removeFavorite } from '../utils/favorites';
 import LibroDetalle from './LibroDetalle';
@@ -91,6 +91,13 @@ const FavoritosPage = () => {
       {selectedLibro && (
         <LibroDetalle libro={selectedLibro} onClose={handleCerrarModal} apiUrl={API_URL} />
       )}
+
+      {/* Footer compacto */}
+      <footer className="favoritos-footer">
+        <p className="favoritos-footer__text">
+          © 2025 The Old Library | <Link to="/legal" className="favoritos-footer__link">Políticas de Privacidad y Legalidad</Link>
+        </p>
+      </footer>
     </div>
   );
 };

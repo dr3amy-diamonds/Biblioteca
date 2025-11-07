@@ -102,11 +102,31 @@ const Evento = () => {
 
   return (
     <div className="evento">
+      <div className="evento__header-bar">
+        <a href="/MainLibrary" className="evento__back-button">
+          ← Volver a la Biblioteca
+        </a>
+      </div>
       <div className="evento__list">
         {eventos.map((ev, idx) => (
           <EventoCard key={idx} evento={ev} />
         ))}
       </div>
+      <footer className="evento__footer">
+        <div className="evento__footer-content">
+          <p className="evento__footer-text">
+            © 2025 The Old Library
+          </p>
+          <div className="evento__footer-links">
+            <a href="/legal" className="evento__footer-link">
+              Políticas de Privacidad
+            </a>
+            <a href="/legal" className="evento__footer-link">
+              Legalidad
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

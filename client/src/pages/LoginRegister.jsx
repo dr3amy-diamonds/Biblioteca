@@ -177,7 +177,7 @@ const LoginRegistro = () => {
                 <p className="login-footer__text">
                     © 2025 The Old Library |{" "}
                     <a href="/legal" className="login-footer__link">
-                        Política de privacidad
+                        Políticas de Privacidad y Legalidad
                     </a>
                 </p>
             </footer>

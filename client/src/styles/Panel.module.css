@@ -6,6 +6,8 @@
     padding: 2rem;
     background-color: #F0F2F5; 
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 /* --- Encabezado --- */
@@ -44,6 +46,7 @@
     display: flex;
     gap: 2rem;
     align-items: flex-start;
+    flex: 1;
 }
 
 /* --- Tarjeta Izquierda (Formulario) --- */
@@ -291,4 +294,30 @@
         flex-basis: 100%;
         max-width: 100%;
     }
+}
+
+/* --- Footer compacto --- */
+.panelFooter {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    text-align: center;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+.panelFooter__text {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.panelFooter__link {
+    color: #ffffff;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.panelFooter__link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
 }

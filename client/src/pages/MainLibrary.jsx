@@ -74,8 +74,8 @@ const MainLibrary = () => {
         <footer className={styles.dashboard__footer}>
             <p className={styles.dashboard__footerText}>
             © 2025 The Old Library |{" "}
-            <a href="#" className={styles.dashboard__footerLink}>
-                Política de privacidad
+            <a href="/legal" className={styles.dashboard__footerLink}>
+                Políticas de Privacidad y Legalidad
             </a>
             </p>
         </footer>

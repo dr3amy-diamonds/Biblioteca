@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styles from "../styles/Panel.module.css";
 
 const API_URL = "http://localhost:3001";
@@ -383,8 +384,14 @@ const Panel = () => {
                         </div>
                     )}
                 </div>
-
             </div>
+
+            {/* Footer compacto */}
+            <footer className={styles.panelFooter}>
+                <p className={styles.panelFooter__text}>
+                    © 2025 The Old Library | <Link to="/legal" className={styles.panelFooter__link}>Políticas de Privacidad y Legalidad</Link>
+                </p>
+            </footer>
         </div>
     );
 };
