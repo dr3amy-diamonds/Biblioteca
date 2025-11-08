@@ -4,6 +4,7 @@
 // Importa estilos desde src/styles/Evento.css para mantener consistencia.
 
 import React, { useState } from "react";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../styles/Evento.css";
 
 // Componente interno para una tarjeta de evento individual.
@@ -41,7 +42,7 @@ const EventoCard = ({ evento }) => {
               onClick={() => setVoyAIr((prev) => !prev)}
               aria-pressed={voyAIr}
             >
-              {voyAIr ? "✔️ Voy a ir" : "Voy a ir"}
+              {voyAIr ? <><i className="fas fa-check"></i> Voy a ir</> : "Voy a ir"}
             </button>
 
             <button
@@ -107,11 +108,17 @@ const Evento = () => {
           ← Volver a la Biblioteca
         </a>
       </div>
-      <div className="evento__list">
+      <TransitionGroup className="evento__list">
         {eventos.map((ev, idx) => (
-          <EventoCard key={idx} evento={ev} />
+          <CSSTransition
+            key={idx}
+            timeout={300}
+            classNames="fade-item"
+          >
+            <EventoCard evento={ev} />
+          </CSSTransition>
         ))}
-      </div>
+      </TransitionGroup>
       <footer className="evento__footer">
         <div className="evento__footer-content">
           <p className="evento__footer-text">

@@ -77,14 +77,14 @@ const LoginRegistro = () => {
             });
 
             if (response.data.success) {
-                alert("✅ Usuario registrado con éxito");
+                alert("✓ Usuario registrado con éxito");
                 document.getElementById("signIn").click(); // vuelve al login
             } else {
-                alert(response.data.message || "❌ El registro falló");
+                alert(response.data.message || "✗ El registro falló");
             }
         } catch (error) {
             console.error("Error en registro:", error);
-            alert("❌ Falló el registro");
+            alert("✗ Falló el registro");
         }
     };
 

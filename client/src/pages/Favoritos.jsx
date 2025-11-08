@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../styles/Favoritos.css';
 import { loadFavorites, removeFavorite } from '../utils/favorites';
 import LibroDetalle from './LibroDetalle';
@@ -53,34 +54,47 @@ const FavoritosPage = () => {
 
       <main className="favoritos-main">
         {favoritos.length === 0 ? (
-          <div className="favoritos-empty">
-            <p>No tienes libros en favoritos todavía.</p>
-            <Link to="/menu" className="favoritos-cta">Ir a Explorar</Link>
-          </div>
+          <CSSTransition
+            in={true}
+            appear={true}
+            timeout={300}
+            classNames="fade"
+          >
+            <div className="favoritos-empty">
+              <p>No tienes libros en favoritos todavía.</p>
+              <Link to="/menu" className="favoritos-cta">Ir a Explorar</Link>
+            </div>
+          </CSSTransition>
         ) : (
-          <section className="favoritos-grid">
+          <TransitionGroup className="favoritos-grid">
             {favoritos.map((b) => (
-              <article key={b.id} className="favorito-card">
-                <img
-                  src={`${API_URL}/api/libros/portada/${b.id}`}
-                  alt={b.titulo}
-                  className="favorito-cover"
-                />
-                <div className="favorito-info">
-                  <h3 className="favorito-title">{b.titulo}</h3>
-                  <p className="favorito-author">{b.autor || 'Autor desconocido'}</p>
-                </div>
-                <div className="favorito-actions">
-                  <button className="favorito-btn" onClick={() => handleVerDetalles(b.id)}>
-                    <i className="fas fa-eye"></i> Ver detalles
-                  </button>
-                  <button className="favorito-btn" onClick={() => handleQuitarFavorito(b.id)}>
-                    <i className="fas fa-heart-broken"></i> Quitar
-                  </button>
-                </div>
-              </article>
+              <CSSTransition
+                key={b.id}
+                timeout={300}
+                classNames="fade-item"
+              >
+                <article className="favorito-card">
+                  <img
+                    src={`${API_URL}/api/libros/portada/${b.id}`}
+                    alt={b.titulo}
+                    className="favorito-cover"
+                  />
+                  <div className="favorito-info">
+                    <h3 className="favorito-title">{b.titulo}</h3>
+                    <p className="favorito-author">{b.autor || 'Autor desconocido'}</p>
+                  </div>
+                  <div className="favorito-actions">
+                    <button className="favorito-btn" onClick={() => handleVerDetalles(b.id)}>
+                      <i className="fas fa-eye"></i> Ver detalles
+                    </button>
+                    <button className="favorito-btn" onClick={() => handleQuitarFavorito(b.id)}>
+                      <i className="fas fa-heart-broken"></i> Quitar
+                    </button>
+                  </div>
+                </article>
+              </CSSTransition>
             ))}
-          </section>
+          </TransitionGroup>
         )}
       </main>
 

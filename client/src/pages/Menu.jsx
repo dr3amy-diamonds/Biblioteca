@@ -1,6 +1,8 @@
 // Menu.jsx (Completo, con paginación Y CORRECCIÓN DE LAYOUT DEFINITIVA)
-import React, { useState, useEffect } from "react";
+// Se añade 'useRef' para las correcciones de react-transition-group
+import React, { useState, useEffect, useRef } from "react"; // <--- CORRECCIÓN
 import { Link } from "react-router-dom";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import styles from "../styles/Menu.module.css";
 import LibroDetalle from "./LibroDetalle"; // Asegúrate de que este componente exista
 
@@ -17,6 +19,9 @@ const Menu = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+
+  // --- REF PARA TRANSICIÓN DE "NO RESULTADOS" ---
+  const noResultsRef = useRef(null); // <--- CORRECCIÓN
   
 
   // --- LÓGICA DE PAGINACIÓN ---
@@ -131,15 +136,15 @@ const Menu = () => {
                 aria-label="Buscar libros por título o autor"
               />
               <button className={styles['search-button']}>
-                <i className="search-icon">🔍</i>
+                <i className="fas fa-search search-icon"></i>
               </button>
             </div>
           </div>
           <nav className={styles['main-nav']}>
             <ul className={styles['nav-links']}>
               <li><Link to="/MainLibrary" className={styles['nav-link']}>Inicio</Link></li>
+              <li><Link to="/menu" className={styles['nav-link']}>Catálogo</Link></li>
               <li><Link to="/categorias" className={styles['nav-link']}>Categorías</Link></li>
-              <li><Link to="/colecciones" className={styles['nav-link']}>Colecciones</Link></li>
               <li><Link to="/recomendados" className={styles['nav-link']}>Recomendados</Link></li>
             </ul>
           </nav>
@@ -165,36 +170,56 @@ const Menu = () => {
 
           {/* Grid de libros o mensaje de sin resultados */}
           {librosActuales.length === 0 && isSearching ? (
-            <div className={styles['no-results']}>
-              <div className={styles['no-results-content']}>
-                <span className={styles['no-results-icon']}>📚</span>
-                <h3>No hay resultados</h3>
-                <p>El libro que has buscado no está en nuestra colección</p>
-                <button onClick={handleClearSearch} className={styles['clear-search']}>
-                  Volver a explorar
-                </button>
+            <CSSTransition
+              in={true}
+              appear={true}
+              timeout={300}
+              classNames="fade"
+              nodeRef={noResultsRef} // <--- CORRECCIÓN
+            >
+              <div className={styles['no-results']} ref={noResultsRef}> {/* <--- CORRECCIÓN */}
+                <div className={styles['no-results-content']}>
+                  <i className="fas fa-book no-results-icon"></i>
+                  <h3>No hay resultados</h3>
+                  <p>El libro que has buscado no está en nuestra colección</p>
+                  <button onClick={handleClearSearch} className={styles['clear-search']}>
+                    Volver a explorar
+                  </button>
+                </div>
               </div>
-            </div>
+            </CSSTransition>
           ) : (
-            <div className={styles['books-grid']}>
-              {librosActuales.map(libro => (
-                <button
-                  key={libro.id}
-                  className={styles['book-card']}
-                  onClick={() => handleBookClick(libro.id)}
-                >
-                  <img
-                    src={`${API_URL}/api/libros/portada/${libro.id}`}
-                    alt={libro.titulo}
-                    className={styles['book-image']}
-                  />
-                  <div className={styles['book-info']}>
-                    <h3 className={styles['book-title']}>{libro.titulo}</h3>
-                    <p className={styles['book-author']}>{libro.autor}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <TransitionGroup className={styles['books-grid']}>
+              {librosActuales.map(libro => {
+                // --- CREAR REF PARA CADA ELEMENTO DEL MAP ---
+                const nodeRef = React.createRef(null); // <--- CORRECCIÓN
+                
+                return (
+                  <CSSTransition
+                    key={libro.id}
+                    timeout={300}
+                    classNames="fade-item"
+                    nodeRef={nodeRef} // <--- CORRECCIÓN
+                  >
+                    <button
+                      ref={nodeRef} // <--- CORRECCIÓN
+                      className={styles['book-card']}
+                      onClick={() => handleBookClick(libro.id)}
+                    >
+                      <img
+                        src={`${API_URL}/api/libros/portada/${libro.id}`}
+                        alt={libro.titulo}
+                        className={styles['book-image']}
+                      />
+                      <div className={styles['book-info']}>
+                        <h3 className={styles['book-title']}>{libro.titulo}</h3>
+                        <p className={styles['book-author']}>{libro.autor}</p>
+                      </div>
+                    </button>
+                  </CSSTransition>
+                );
+              })}
+            </TransitionGroup>
           )}
           
           {libros.length === 0 && !isSearching && (
