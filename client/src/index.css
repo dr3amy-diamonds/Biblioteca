@@ -1,8 +1,8 @@
 /* src/styles/index.css */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display.swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display.swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
 
-/* Variables de color globales (movidas desde Menu.css) */
+/* Variables de color globales */
 :root {
     --primary-color: #5c4b3e;
     --secondary-color: #f2ebd5;
@@ -10,7 +10,6 @@
     --text-color: #333;
     --light-text: #fff;
     --book-card-bg: #f8f5e9;
-    --pagination-active: #5c4b3e;
 }
 
 /* Reset básico */
@@ -21,6 +20,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -28,10 +31,57 @@ html, body {
     /* Este es tu fondo global verde oscuro */
     /* background-color: #101e1a; */
     color: var(--text-color);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4 {
     font-family: "Playfair Display", serif;
+}
+
+/* Tipografía UI y párrafos */
+button, input, select, textarea {
+    font-family: "Montserrat", sans-serif;
+}
+
+p, li, label {
+    font-family: "Cormorant Garamond", serif;
+}
+
+/* Foco accesible para elementos interactivos */
+:is(a, button, [role="button"], input, select, textarea, .pageLink, .book-card, .favorito-btn, .favoritos-link, .clear-search):focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Estilos para reducción de movimiento (accesibilidad) */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Scrollbar personalizado (opcional, mantiene el tema) */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
 }
 
 #root, .App {
@@ -43,13 +93,14 @@ h1, h2, h3, h4 {
 /* Animaciones de entrada/salida */
 .fade-enter {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
 }
 
 .fade-enter-active {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 300ms ease-out, transform 300ms ease-out;
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
 }
 
 .fade-exit {
@@ -59,18 +110,20 @@ h1, h2, h3, h4 {
 
 .fade-exit-active {
     opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 300ms ease-in, transform 300ms ease-in;
+    transform: translateY(-12px);
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
 }
 
 /* Animación para elementos individuales */
 .fade-item-enter {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.96);
 }
 
 .fade-item-enter-active {
     opacity: 1;
     transform: scale(1);
-    transition: opacity 300ms ease-out, transform 300ms ease-out;
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
 }

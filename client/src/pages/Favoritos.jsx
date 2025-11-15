@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+// Se añaden useRef y createRef
+import React, { useEffect, useState, useRef, createRef } from 'react'; // <--- CORRECCIÓN
 import { Link } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../styles/Favoritos.css';
@@ -11,6 +12,9 @@ const FavoritosPage = () => {
   const [favoritos, setFavoritos] = useState([]);
   const [selectedLibro, setSelectedLibro] = useState(null);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
+
+  // Ref para el contenedor vacío
+  const emptyRef = useRef(null); // <--- CORRECCIÓN
 
   useEffect(() => {
     setFavoritos(loadFavorites());
@@ -59,41 +63,47 @@ const FavoritosPage = () => {
             appear={true}
             timeout={300}
             classNames="fade"
+            nodeRef={emptyRef} // <--- CORRECCIÓN
           >
-            <div className="favoritos-empty">
+            <div className="favoritos-empty" ref={emptyRef}> {/* <--- CORRECCIÓN */}
               <p>No tienes libros en favoritos todavía.</p>
               <Link to="/menu" className="favoritos-cta">Ir a Explorar</Link>
             </div>
           </CSSTransition>
         ) : (
           <TransitionGroup className="favoritos-grid">
-            {favoritos.map((b) => (
-              <CSSTransition
-                key={b.id}
-                timeout={300}
-                classNames="fade-item"
-              >
-                <article className="favorito-card">
-                  <img
-                    src={`${API_URL}/api/libros/portada/${b.id}`}
-                    alt={b.titulo}
-                    className="favorito-cover"
-                  />
-                  <div className="favorito-info">
-                    <h3 className="favorito-title">{b.titulo}</h3>
-                    <p className="favorito-author">{b.autor || 'Autor desconocido'}</p>
-                  </div>
-                  <div className="favorito-actions">
-                    <button className="favorito-btn" onClick={() => handleVerDetalles(b.id)}>
-                      <i className="fas fa-eye"></i> Ver detalles
-                    </button>
-                    <button className="favorito-btn" onClick={() => handleQuitarFavorito(b.id)}>
-                      <i className="fas fa-heart-broken"></i> Quitar
-                    </button>
-                  </div>
-                </article>
-              </CSSTransition>
-            ))}
+            {favoritos.map((b) => {
+              // Se crea una ref para cada elemento de la lista
+              const nodeRef = createRef(null); // <--- CORRECCIÓN
+              return (
+                <CSSTransition
+                  key={b.id}
+                  timeout={300}
+                  classNames="fade-item"
+                  nodeRef={nodeRef} // <--- CORRECCIÓN
+                >
+                  <article className="favorito-card" ref={nodeRef}> {/* <--- CORRECCIÓN */}
+                    <img
+                      src={`${API_URL}/api/libros/portada/${b.id}`}
+                      alt={b.titulo}
+                      className="favorito-cover"
+                    />
+                    <div className="favorito-info">
+                      <h3 className="favorito-title">{b.titulo}</h3>
+                      <p className="favorito-author">{b.autor || 'Autor desconocido'}</p>
+                    </div>
+                    <div className="favorito-actions">
+                      <button className="favorito-btn" onClick={() => handleVerDetalles(b.id)}>
+                        <i className="fas fa-eye"></i> Ver detalles
+                      </button>
+                      <button className="favorito-btn" onClick={() => handleQuitarFavorito(b.id)}>
+                        <i className="fas fa-heart-broken"></i> Quitar
+                      </button>
+                    </div>
+                  </article>
+                </CSSTransition>
+              );
+            })}
           </TransitionGroup>
         )}
       </main>

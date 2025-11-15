@@ -351,6 +351,7 @@ const Header = ({ searchTerm, setSearchTerm, handleClearSearch, isSearching }) =
       <nav className={styles['main-nav']}>
         <ul className={styles['nav-links']}>
           <li><Link to="/MainLibrary" className={styles['nav-link']}>Inicio</Link></li>
+          <li><Link to="/menu" className={styles['nav-link']}>Catálogo</Link></li>
           <li><Link to="/categorias" className={styles['nav-link']}>Categorías</Link></li>
           <li><Link to="/recomendados" className={styles['nav-link']}>Recomendados</Link></li>
         </ul>

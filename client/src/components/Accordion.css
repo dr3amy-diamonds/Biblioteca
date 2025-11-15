@@ -1,66 +1,83 @@
     /* src/components/Accordion.css */
 
     .accordion__item {
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    transition: all 0.3s ease;
-    border: none;
-    /* Fondo oscuro semi-transparente para el acordeón */
-    background-color: rgba(20, 15, 10, 0.7);
-    backdrop-filter: blur(5px);
-    margin-bottom: 10px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(200, 173, 127, 0.2);
+    background-color: rgba(20, 15, 10, 0.75);
+    backdrop-filter: blur(10px);
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .accordion__item:hover {
+    border-color: rgba(200, 173, 127, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
 
     .accordion__title {
     margin: 0;
-    padding: 1.2rem 1.5rem;
+    padding: 1.5rem 2rem;
     font-size: 1.5rem;
-    font-weight: 600; /* Le damos más peso */
+    font-weight: 600;
     cursor: pointer;
-    color: #f4efea; /* Texto claro */
+    color: #f4efea;
     user-select: none;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    letter-spacing: 0.5px;
     }
 
     .accordion__title:hover {
-    /* Al pasar el mouse, se oscurece un poco */
-    background-color: rgba(20, 15, 10, 0.9);
+    background-color: rgba(20, 15, 10, 0.95);
+    color: #d2b48c;
+    padding-left: 2.2rem;
     }
 
     .accordion__icon {
-    transition: transform 0.3s ease;
-    font-size: 1.5rem;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.8rem;
     font-weight: 300;
+    color: #c8ad7f;
     }
 
     .accordion__content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-out;
-    /* El contenido tendrá el texto de párrafo */
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     color: #d9d3c9; 
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.8;
     }
 
     /* El padding va en el div interno para una animación limpia */
     .accordion__content-inner {
-    padding: 0 1.5rem;
+    padding: 0 2rem;
     }
 
     /* --- Lógica de apertura (con BEM) --- */
 
+    .accordion__item--active {
+    background-color: rgba(20, 15, 10, 0.85);
+    border-color: rgba(200, 173, 127, 0.5);
+    }
+
     .accordion__item--active .accordion__content {
-    max-height: 500px; /* Altura suficiente */
+    max-height: 600px;
     }
 
     .accordion__item--active .accordion__content-inner {
-    padding: 1rem 1.5rem 1.5rem 1.5rem; /* Padding completo al abrir */
+    padding: 1.2rem 2rem 2rem 2rem;
     }
 
     .accordion__item--active .accordion__icon {
     transform: rotate(45deg);
+    color: #d2b48c;
+    }
+    
+    .accordion__item--active .accordion__title {
+    color: #d2b48c;
     }
