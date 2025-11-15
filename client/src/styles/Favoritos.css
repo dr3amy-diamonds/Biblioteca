@@ -11,20 +11,52 @@
 .favoritos-header {
   background-color: var(--primary-color);
   color: var(--light-text);
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 0 2rem;
+}
+
+.favoritos-header__top-row {
+  display: flex;
+  align-items: center;
+  padding-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.favoritos-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.favoritos-logo-container:hover {
+  opacity: 0.85;
+}
+
+.favoritos-logo {
+  height: 50px;
+  width: auto;
+}
+
+.favoritos-logo-title {
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--secondary-color);
+  font-weight: normal;
 }
 
 .favoritos-header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 1rem 0;
 }
 
 .favoritos-title {
   font-family: "Playfair Display", serif;
   font-size: 1.8rem;
   margin: 0;
+  color: var(--secondary-color);
 }
 
 .favoritos-nav {

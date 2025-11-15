@@ -47,8 +47,14 @@ const FavoritosPage = () => {
   return (
     <div className="favoritos-container">
       <header className="favoritos-header">
+        <div className="favoritos-header__top-row">
+          <Link to="/MainLibrary" className="favoritos-logo-container" style={{ textDecoration: 'none' }}>
+            <img src="/images/logo.png" alt="The Old Library Logo" className="favoritos-logo" />
+            <h1 className="favoritos-logo-title">The Old Library</h1>
+          </Link>
+        </div>
         <div className="favoritos-header__inner">
-          <h1 className="favoritos-title">Mis Favoritos</h1>
+          <h2 className="favoritos-title">Mis Favoritos</h2>
           <nav className="favoritos-nav">
             <Link to="/MainLibrary" className="favoritos-link">Inicio</Link>
             <Link to="/menu" className="favoritos-link">Explorar colección</Link>

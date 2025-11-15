@@ -7,7 +7,9 @@ function AvisoLegal() {
     <div className="legal-page">
       <header className="legal-header">
         <div className="legal-header__inner">
-          <img src="/images/logo.png" alt="The Old Library" className="legal-header__logo" />
+          <Link to="/MainLibrary" style={{ textDecoration: 'none' }}>
+            <img src="/images/logo.png" alt="The Old Library" className="legal-header__logo" />
+          </Link>
           <h1 className="legal-header__title">Aviso Legal y Políticas de Uso</h1>
           <p className="legal-header__subtitle">The Old Library — Biblioteca digital de obras de dominio público y libre distribución</p>
         </div>

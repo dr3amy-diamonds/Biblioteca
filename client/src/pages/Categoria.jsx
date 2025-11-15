@@ -330,10 +330,10 @@ const Header = ({ searchTerm, setSearchTerm, handleClearSearch, isSearching }) =
   return (
     <header className={styles['menu-header']}>
       <div className={styles['header-top-row']}>
-        <div className={styles['logo-container']}>
+        <Link to="/MainLibrary" className={styles['logo-container']} style={{ textDecoration: 'none' }}>
           <img src="/images/logo.png" alt="The Old Library Logo" className={styles.logo} />
           <h1>The Old Library</h1>
-        </div>
+        </Link>
         <div className={styles['search-container']}>
           <input 
             type="text" 

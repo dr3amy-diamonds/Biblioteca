@@ -78,10 +78,10 @@ const Recomendacion = () => {
       <div className={styles['recomendacion-container']}>
         <header className={styles['recomendacion-header']}>
           <div className={styles['header-top-row']}>
-            <div className={styles['logo-container']}>
+            <Link to="/MainLibrary" className={styles['logo-container']} style={{ textDecoration: 'none' }}>
               <img src="/images/logo.png" alt="The Old Library Logo" className={styles.logo} />
               <h1>The Old Library</h1>
-            </div>
+            </Link>
           </div>
           <nav className={styles['main-nav']}>
             <ul className={styles['nav-links']}>

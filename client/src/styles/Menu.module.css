@@ -33,6 +33,12 @@
 .logo-container {
   display: flex;
   align-items: center;
+  text-decoration: none;
+}
+
+.logo-container h1 {
+  color: var(--secondary-color);
+  margin: 0;
 }
 
 .logo {

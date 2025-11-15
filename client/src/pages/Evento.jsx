@@ -4,6 +4,7 @@
 // Importa estilos desde src/styles/Evento.css para mantener consistencia.
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../styles/Evento.css";
 
@@ -103,12 +104,26 @@ const Evento = () => {
 
   return (
     <div className="evento">
-      <div className="evento__header-bar">
-        <a href="/MainLibrary" className="evento__back-button">
-          ← Volver a la Biblioteca
-        </a>
-      </div>
-      <TransitionGroup className="evento__list">
+      <header className="evento__main-header">
+        <div className="evento__header-top-row">
+          <Link to="/MainLibrary" className="evento__logo-container" style={{ textDecoration: 'none' }}>
+            <img src="/images/logo.png" alt="The Old Library Logo" className="evento__logo" />
+            <h1>The Old Library</h1>
+          </Link>
+        </div>
+        <nav className="evento__main-nav">
+          <ul className="evento__nav-links">
+            <h2><i className="fas fa-calendar-alt"></i> Eventos y Actividades</h2>
+          </ul>
+        </nav>
+      </header>
+
+      <section className="evento__content-section">
+        <div className="evento__page-title">
+          <p>Descubre nuestros próximos eventos literarios</p>
+        </div>
+
+        <TransitionGroup className="evento__list">
         {eventos.map((ev, idx) => (
           <CSSTransition
             key={idx}
@@ -118,7 +133,9 @@ const Evento = () => {
             <EventoCard evento={ev} />
           </CSSTransition>
         ))}
-      </TransitionGroup>
+        </TransitionGroup>
+      </section>
+
       <footer className="evento__footer">
         <div className="evento__footer-content">
           <p className="evento__footer-text">

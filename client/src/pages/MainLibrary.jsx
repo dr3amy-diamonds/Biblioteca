@@ -18,14 +18,14 @@ const MainLibrary = () => {
 
         {/* --- HEADER --- */}
         <header className={styles.dashboard__header}>
-            <div className={styles.dashboard__logoContainer}>
+            <Link to="/MainLibrary" className={styles.dashboard__logoContainer} style={{ textDecoration: 'none' }}>
             <img
                 src="/images/logo.png"
                 alt="Logo"
                 className={styles.dashboard__logoImg}
             />
             <h1 className={styles.dashboard__logoTitle}>The Old Library</h1>
-            </div>
+            </Link>
 
             <button onClick={handleLogout} className={styles.dashboard__logoutBtn}>
                 <i className="fas fa-sign-out-alt"></i> Cerrar sesión
